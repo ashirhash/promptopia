@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
 
 import Form from "@components/Form";
 
@@ -56,7 +55,7 @@ const UpdatePrompt = () => {
   }, [promptId]);
 
   return (
-    <Suspense fallback={<div className="desc text-center">Loading...</div>}>
+    <>
       {promptId ? (
         <Form
           type="Update"
@@ -68,7 +67,7 @@ const UpdatePrompt = () => {
       ) : (
         <div className="desc text-center">No prompt ID found</div>
       )}
-    </Suspense>
+    </>
   );
 };
 
