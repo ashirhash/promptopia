@@ -43,6 +43,7 @@ const UpdatePrompt = () => {
 
   useEffect(() => {
     const getPromptDetails = async () => {
+      if (!promptId) return;
       const response = await fetch(`/api/prompt/${promptId}`);
       const data = await response.json();
 
@@ -55,7 +56,7 @@ const UpdatePrompt = () => {
   }, [promptId]);
 
   return (
-    <Suspense>
+    <Suspense fallback={<div className="desc text-center">Loading...</div>}>
       <Form
         type="Update"
         post={post}
