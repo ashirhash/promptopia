@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 import Form from "@components/Form";
 
@@ -20,7 +21,7 @@ const UpdatePrompt = () => {
     e.preventDefault();
     setSubmitting(true);
 
-    if (!promptId) return alert ('prompt ID not found')
+    if (!promptId) return alert("prompt ID not found");
 
     try {
       const response = await fetch(`api/prompt/${promptId}`, {
@@ -41,26 +42,28 @@ const UpdatePrompt = () => {
   };
 
   useEffect(() => {
-    const getPromptDetails = async()=> {
-        const response = await fetch(`/api/prompt/${promptId}`)
-        const data = await response.json()
+    const getPromptDetails = async () => {
+      const response = await fetch(`/api/prompt/${promptId}`);
+      const data = await response.json();
 
-        setPost({
-            prompt: data.prompt,
-            tag: data.tag
-        })
-    }
+      setPost({
+        prompt: data.prompt,
+        tag: data.tag,
+      });
+    };
     getPromptDetails();
   }, [promptId]);
 
   return (
-    <Form
-      type="Update"
-      post={post}
-      setPost={setPost}
-      submitting={submitting}
-      handleSubmit={(updatePrompt)}
-    />
+    <Suspense>
+      <Form
+        type="Update"
+        post={post}
+        setPost={setPost}
+        submitting={submitting}
+        handleSubmit={updatePrompt}
+      />
+    </Suspense>
   );
 };
 
