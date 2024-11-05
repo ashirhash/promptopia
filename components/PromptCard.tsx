@@ -21,17 +21,26 @@ const PromptCard = ({
   const { data: session }: any = useSession();
   const pathName = usePathname();
   const router = useRouter();
+  
   const handleCopy = () => {
     setCopied(post.prompt);
     navigator.clipboard.writeText(post.prompt);
     setTimeout(() => setCopied(""), 3000);
   };
+
+  const handleUserClick = () => {
+    router.push(`/author/${post.creator._id}`)
+  };
+
   return (
     <div className="prompt_card">
       <div className="flex justify-between items-start gap-5">
         <div className="flex-1 flex flex-col item items-start justify-between gap-3">
           <div className="flex gap-3 items-center w-full justify-between ">
-            <div className="flex gap-3 items-center cursor-pointer">
+            <div
+              onClick={() => handleUserClick()}
+              className="flex gap-3 items-center cursor-pointer"
+            >
               <Image
                 src={post.creator.image}
                 alt="user_image"
@@ -62,9 +71,7 @@ const PromptCard = ({
             </div>
           </div>
 
-          <p className=" font-satoshi text-sm text-gray-700">
-            {post.prompt}
-          </p>
+          <p className=" font-satoshi text-sm text-gray-700">{post.prompt}</p>
           <p
             className="font-inter text-sm blue_gradient cursor-pointer"
             onClick={() => handleTagClick && handleTagClick(post.tag)}

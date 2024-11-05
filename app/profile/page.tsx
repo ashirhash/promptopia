@@ -2,17 +2,15 @@
 
 import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 import Profile from "@components/Profile";
 
 const MyProfile = () => {
   const [posts, setPosts] = useState([]);
   const { data: session }: any = useSession();
-  const router = useRouter();
 
   const handleEdit = (post: any) => {
-    router.push(`/update-prompt?id=${post._id}`);
+    (`/update-prompt?id=${post._id}`);
   };
   const handleDelete = async (post: any) => {
     const hasConfirmed = confirm(

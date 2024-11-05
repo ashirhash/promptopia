@@ -36,6 +36,8 @@ const Feed = () => {
       const data = await response.json();
       setPosts(data);
       setFilteredPosts(data);
+      console.log(data);
+      
     };
 
     fetchPosts();
