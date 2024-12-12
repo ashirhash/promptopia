@@ -14,6 +14,7 @@ const CreatePrompt = () => {
   const [post, setPost] = useState({
     prompt: "",
     tag: "",
+    likes: 0
   });
 
   const createPrompt = async (e: any) => {
@@ -27,6 +28,7 @@ const CreatePrompt = () => {
           prompt: post.prompt,
           userId: session?.user.id,
           tag: post.tag,
+          likes: post.likes,
         }),
       });
       if (response.ok) {

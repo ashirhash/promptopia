@@ -14,7 +14,18 @@ const config: Config = {
       },
       colors: {
         'primary-orange': '#FF5722',
-      }
+        'accent-gray': '#f0eef4'
+      },
+      keyframes: {
+        like_effect: {
+          "0%": { transform: "scale(1)" },
+          "50%": { transform: "scale(1.35)" },
+          "100%": { transform: "scale(1)" },
+        },
+      },
+      animation: {
+        like: "like_effect 400ms ease",
+      },
     },
   },
   plugins: [],

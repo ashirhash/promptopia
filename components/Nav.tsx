@@ -4,10 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Nav = () => {
   const { data: session } = useSession();
 
+  const router = useRouter();
   const [providers, setProviders] = useState<any>(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
@@ -44,7 +46,7 @@ const Nav = () => {
             <button
               type="button"
               className="outline_btn"
-              onClick={() => signOut()}
+              onClick={() => signOut({ callbackUrl: '/'})}
             >
               Sign Out
             </button>

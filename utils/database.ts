@@ -18,7 +18,7 @@ export const ConnectToDB = async () => {
 
     try {
         await mongoose.connect(mongoDbUri, {
-            dbName: "share_prompt"
+            dbName: "promptopia"
         })
 
         isConnected = true

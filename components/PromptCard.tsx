@@ -1,8 +1,10 @@
 "use client";
-import { useState } from "react";
+import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
+import { HeartIcon } from "./ui/Icons";
+import { useDebounce } from "@utils/hooks";
 
 interface PromptCardProps {
   post: any;
@@ -18,18 +20,55 @@ const PromptCard = ({
   handleDelete,
 }: PromptCardProps) => {
   const [copied, setCopied] = useState("");
+  const [likes, setLikes] = useState<number>(post.likes);
+  const [isLiked, setIsLiked] = useState(false);
+
   const { data: session }: any = useSession();
+
   const pathName = usePathname();
   const router = useRouter();
-  
+
   const handleCopy = () => {
     setCopied(post.prompt);
     navigator.clipboard.writeText(post.prompt);
     setTimeout(() => setCopied(""), 3000);
   };
 
+  const debLikes = useDebounce(likes, 2000);
+  const handleLike = () => {
+    setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
+    setIsLiked((prev) => !prev);
+  };
+
+  useEffect(() => {
+    const updateLikes = async () => {
+      try {
+        await fetch(`/api/prompt/${post._id}/like`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: session?.user.id,
+          }),
+        });
+      } catch (error) {
+        console.error(
+          "The following error occured while liking the post: ",
+          error
+        );
+      }
+    };
+      updateLikes();
+  }, [debLikes]);
+  console.log(session, "current session");
+
+  const targetPath = `/author/${post.creator._id}`;
+  const userClickEnabled = session?.user.id !== post.creator._id;
   const handleUserClick = () => {
-    router.push(`/author/${post.creator._id}`)
+    if (userClickEnabled) {
+      router.push(targetPath);
+    }
   };
 
   return (
@@ -39,7 +78,9 @@ const PromptCard = ({
           <div className="flex gap-3 items-center w-full justify-between ">
             <div
               onClick={() => handleUserClick()}
-              className="flex gap-3 items-center cursor-pointer"
+              className={`flex gap-3 items-center ${
+                userClickEnabled ? "cursor-pointer" : "cursor-default"
+              }`}
             >
               <Image
                 src={post.creator.image}
@@ -78,22 +119,36 @@ const PromptCard = ({
           >
             {post.tag}
           </p>
-          {session?.user.id === post.creator._id && pathName === "/profile" && (
-            <div className="flex gap-3 mt-5">
-              <p
-                className="font-inter text-sm green_gradient cursor-pointer"
-                onClick={handleEdit}
-              >
-                Edit
-              </p>
-              <p
-                className="font-inter text-sm orange_gradient cursor-pointer"
-                onClick={handleDelete}
-              >
-                Delete
-              </p>
+          <div className="flex justify-between items-center gap-3 w-full mt-3">
+            <div
+              className="flex items-center gap-2 select-none cursor-pointer"
+              onClick={() => handleLike()}
+            >
+              <HeartIcon
+                fillColor={isLiked ? "#FF5722" : "none"}
+                isActive={isLiked}
+              />
+              <span className="font-inter text-sm text-gray-700">{likes}</span>
             </div>
-          )}
+            <div className="flex gap-4">
+              {handleEdit && (
+                <p
+                  className={`font-inter text-sm green_gradient cursor-pointer`}
+                  onClick={handleEdit}
+                >
+                  Edit
+                </p>
+              )}
+              {handleDelete && (
+                <p
+                  className="font-inter text-sm orange_gradient cursor-pointer"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </p>
+              )}
+            </div>
+          </div>
         </div>
       </div>
     </div>

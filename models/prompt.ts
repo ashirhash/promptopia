@@ -5,6 +5,7 @@ const PromptSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  createdAt: { type: Date, default: Date.now },
   prompt: {
     type: String,
     required: [true, "Prompt is required."],
@@ -12,7 +13,7 @@ const PromptSchema = new Schema({
   tag: {
     type: String,
     required: [true, "Tag is required."],
-  },
+  }
 });
 
 const Prompt = models.Prompt || model("Prompt", PromptSchema);
