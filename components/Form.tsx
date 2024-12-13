@@ -57,7 +57,7 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: FormProps) => {
                 tag: e.target.value,
               })
             }
-            placeholder="#tag"
+            placeholder="YourTagHere"
             required
             className="form_input"
           />

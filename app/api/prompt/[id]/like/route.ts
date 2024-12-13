@@ -9,16 +9,17 @@ export const PATCH = async (req: any, { params }: any) => {
     const { userId } = await req.json();
     const postId = params.id
 
-    console.log(userId, postId);
-
     const existingLike = await Likes.findOne({ postId, userId });
 
+    // If the like exists, delete it (dislike)
     if (existingLike) {
-      return new Response("User has already liked this post", {
-        status: 400,
+      await Likes.findByIdAndDelete(existingLike._id)
+      return new Response("Prompt disliked successfully", {
+        status: 200,
       });
     }
 
+    // If the like doesn't exist, add a new like (like)
     const newLikedPost = new Likes({userId, postId})
     await newLikedPost.save();
     

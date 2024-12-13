@@ -1,5 +1,5 @@
 "use client";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
@@ -21,11 +21,16 @@ const PromptCard = ({
 }: PromptCardProps) => {
   const [copied, setCopied] = useState("");
   const [likes, setLikes] = useState<number>(post.likes);
-  const [isLiked, setIsLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState<boolean>(post.liked || false);
+
+  // disable liking unless user interacts with the button for avoiding side effects
+  const [hasInteracted, setHasInteracted] = useState(false);
 
   const { data: session }: any = useSession();
 
-  const pathName = usePathname();
+  console.log(session);
+  
+
   const router = useRouter();
 
   const handleCopy = () => {
@@ -35,33 +40,45 @@ const PromptCard = ({
   };
 
   const debLikes = useDebounce(likes, 2000);
+
   const handleLike = () => {
-    setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
-    setIsLiked((prev) => !prev);
+    if(session){
+      setHasInteracted(true);
+      setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
+      setIsLiked((prev) => !prev);
+    }
   };
 
   useEffect(() => {
-    const updateLikes = async () => {
-      try {
-        await fetch(`/api/prompt/${post._id}/like`, {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            userId: session?.user.id,
-          }),
-        });
-      } catch (error) {
-        console.error(
-          "The following error occured while liking the post: ",
-          error
-        );
-      }
-    };
+    if (hasInteracted) {
+      const updateLikes = async () => {
+        if (!session.user.id) {
+          console.warn(
+            "User is not logged in or session data is not available"
+          );
+          return;
+        }
+
+        try {
+          await fetch(`/api/prompt/${post._id}/like`, {
+            method: "PATCH",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              userId: session?.user.id,
+            }),
+          });
+        } catch (error) {
+          console.error(
+            "The following error occured while liking the post: ",
+            error
+          );
+        }
+      };
       updateLikes();
+    }
   }, [debLikes]);
-  console.log(session, "current session");
 
   const targetPath = `/author/${post.creator._id}`;
   const userClickEnabled = session?.user.id !== post.creator._id;
