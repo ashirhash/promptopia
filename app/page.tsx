@@ -9,18 +9,18 @@ const Home = () => {
   // load posts
   const [posts, setPosts] = useState([]);
   useEffect(() => {
-      const fetchPosts = async () => {
-        const response = await fetch(`/api/prompt`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "userId": session?.user.id,
-          },
-        });
-        const data = await response.json();
-        setPosts(data);
-      };
-      fetchPosts();
+    const fetchPosts = async () => {
+      const response = await fetch(`/api/prompt`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          userId: session?.user.id ,
+        },
+      });
+      const data = await response.json();
+      setPosts(data);
+    };
+    fetchPosts();
   }, [session]);
 
   return (

@@ -34,7 +34,7 @@ const UpdatePrompt = () => {
         router.push("/");
       }
     } catch (error: any) {
-      console.log(error);
+      console.error(error);
     } finally {
       setSubmitting(false);
     }

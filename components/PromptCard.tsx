@@ -2,7 +2,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
+import {  useRouter } from "next/navigation";
 import { HeartIcon } from "./ui/Icons";
 import { useDebounce } from "@utils/hooks";
 
@@ -19,6 +19,8 @@ const PromptCard = ({
   handleEdit,
   handleDelete,
 }: PromptCardProps) => {
+  console.log(post);
+  
   const [copied, setCopied] = useState("");
   const [likes, setLikes] = useState<number>(post.likes);
   const [isLiked, setIsLiked] = useState<boolean>(post.liked || false);
@@ -27,9 +29,6 @@ const PromptCard = ({
   const [hasInteracted, setHasInteracted] = useState(false);
 
   const { data: session }: any = useSession();
-
-  console.log(session);
-  
 
   const router = useRouter();
 
