@@ -7,22 +7,24 @@ export const PATCH = async (req: any, { params }: any) => {
     await ConnectToDB();
 
     const { userId } = await req.json();
-    const postId = params.id
+    const postId = params.id;
 
     const existingLike = await Likes.findOne({ postId, userId });
 
     // If the like exists, delete it (dislike)
     if (existingLike) {
-      await Likes.findByIdAndDelete(existingLike._id)
+      await Likes.findByIdAndDelete(existingLike._id);
+      const totalLikes = await Likes.countDocuments({ postId });
+      await Prompt.findByIdAndUpdate(postId, { likes: totalLikes });
       return new Response("Prompt disliked successfully", {
         status: 200,
       });
     }
 
     // If the like doesn't exist, add a new like (like)
-    const newLikedPost = new Likes({userId, postId})
+    const newLikedPost = new Likes({ userId, postId });
     await newLikedPost.save();
-    
+
     const totalLikes = await Likes.countDocuments({ postId });
     await Prompt.findByIdAndUpdate(postId, { likes: totalLikes });
 

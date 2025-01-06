@@ -7,6 +7,9 @@ export const GET = async (req: any, { params }: any) => {
 
     const prompt = await Prompt.findById(params.id).populate("creator");
 
+    console.log(prompt);
+    
+
     if (!prompt) return new Response("Prompt not found", { status: 404 });
 
     return new Response(JSON.stringify(prompt), {

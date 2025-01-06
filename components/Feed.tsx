@@ -41,7 +41,6 @@ const Feed = ({ posts, handleEdit, handleDelete }: any) => {
     setSearchText(text);
   };
 
-  // component
   return (
     <section className="feed">
       <Search

@@ -31,7 +31,7 @@ const handler = NextAuth({
         const userExists = await User.findOne({
           email: profile.email,
         }).catch((err) => {
-          console.log("Error in finding user: ", err.message);
+          console.error("Error in finding user: ", err.message);
           throw new Error("Database query failed");
         });
 
@@ -41,14 +41,14 @@ const handler = NextAuth({
             username: profile.name.replace(" ", "").toLowerCase(),
             image: profile.picture,
           }).catch((err) => {
-            console.log("Error creating new user: ", err.message);
+            console.error("Error creating new user: ", err.message);
             throw new Error("User creation failed");
           });
         }
 
         return true;
       } catch (error: any) {
-        console.log("Error checking if user exists: ", error.message);
+        console.error("Error checking if user exists: ", error.message);
         return false;
       }
     },

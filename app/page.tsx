@@ -5,7 +5,6 @@ import Feed from "@components/Feed";
 
 const Home = () => {
   const { data: session }: any = useSession();
-
   // load posts
   const [posts, setPosts] = useState([]);
   useEffect(() => {

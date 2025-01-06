@@ -34,7 +34,6 @@ const Search = ({
       });
       setFilteredPosts(filtered);
     }
-
   }, [searchText, posts]);
 
   return (

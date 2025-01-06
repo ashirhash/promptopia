@@ -2,15 +2,16 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
-import {  useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { HeartIcon } from "./ui/Icons";
 import { useDebounce } from "@utils/hooks";
+import { types } from "util";
 
 interface PromptCardProps {
   post: any;
   handleTagClick?: ({}) => void;
-  handleEdit?: () => void;
-  handleDelete?: () => void;
+  handleDelete?: (post: number) => void;
+  handleEdit?: (post: number) => void;
 }
 
 const PromptCard = ({
@@ -19,18 +20,17 @@ const PromptCard = ({
   handleEdit,
   handleDelete,
 }: PromptCardProps) => {
-  console.log(post);
-  
   const [copied, setCopied] = useState("");
   const [likes, setLikes] = useState<number>(post.likes);
-  const [isLiked, setIsLiked] = useState<boolean>(post.liked || false);
+  const [isLiked, setIsLiked] = useState<boolean>(post.liked);
 
   // disable liking unless user interacts with the button for avoiding side effects
   const [hasInteracted, setHasInteracted] = useState(false);
-
   const { data: session }: any = useSession();
-
   const router = useRouter();
+  const userId = session?.user.id;
+  console.log(userId);
+  
 
   const handleCopy = () => {
     setCopied(post.prompt);
@@ -38,15 +38,20 @@ const PromptCard = ({
     setTimeout(() => setCopied(""), 3000);
   };
 
-  const debLikes = useDebounce(likes, 2000);
+  const debLikes = useDebounce(likes, 1000);
 
   const handleLike = () => {
-    if(session){
+    if (session) {
       setHasInteracted(true);
       setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
       setIsLiked((prev) => !prev);
     }
   };
+
+  useEffect(() => {
+    // Update `isLiked` whenever `post.liked` changes after session is updated
+    setIsLiked(post.liked);
+  }, [post.liked]);
 
   useEffect(() => {
     if (hasInteracted) {
@@ -79,11 +84,13 @@ const PromptCard = ({
     }
   }, [debLikes]);
 
-  const targetPath = `/author/${post.creator._id}`;
-  const userClickEnabled = session?.user.id !== post.creator._id;
+  const isSameUser = session?.user.id !== post.creator._id;
   const handleUserClick = () => {
-    if (userClickEnabled) {
-      router.push(targetPath);
+    if (isSameUser) {
+      router.push(`/authors/${post.creator._id}`);
+    }
+    else if(session){
+      router.push("/profile");
     }
   };
 
@@ -94,9 +101,7 @@ const PromptCard = ({
           <div className="flex gap-3 items-center w-full justify-between ">
             <div
               onClick={() => handleUserClick()}
-              className={`flex gap-3 items-center ${
-                userClickEnabled ? "cursor-pointer" : "cursor-default"
-              }`}
+              className={`flex gap-3 items-center cursor-pointer`}
             >
               <Image
                 src={post.creator.image}
@@ -140,17 +145,14 @@ const PromptCard = ({
               className="flex items-center gap-2 select-none cursor-pointer"
               onClick={() => handleLike()}
             >
-              <HeartIcon
-                fillColor={isLiked ? "#FF5722" : "none"}
-                isActive={isLiked}
-              />
+              <HeartIcon isActive={isLiked} />
               <span className="font-inter text-sm text-gray-700">{likes}</span>
             </div>
             <div className="flex gap-4">
               {handleEdit && (
                 <p
                   className={`font-inter text-sm green_gradient cursor-pointer`}
-                  onClick={handleEdit}
+                  onClick={() => handleEdit(post)}
                 >
                   Edit
                 </p>
@@ -158,7 +160,7 @@ const PromptCard = ({
               {handleDelete && (
                 <p
                   className="font-inter text-sm orange_gradient cursor-pointer"
-                  onClick={handleDelete}
+                  onClick={() => handleDelete(post)}
                 >
                   Delete
                 </p>
