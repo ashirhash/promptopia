@@ -1,9 +1,14 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react"; // Suspense is still needed for async operations
+import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-
 import Form from "@components/Form";
+
+const UpdatePromptWrapper = () => {
+  return (
+    <UpdatePrompt />
+  );
+};
 
 const UpdatePrompt = () => {
   const router = useRouter();
@@ -23,7 +28,7 @@ const UpdatePrompt = () => {
     if (!promptId) return alert("prompt ID not found");
 
     try {
-      const response = await fetch(`api/prompt/${promptId}`, {
+      const response = await fetch(`/api/prompt/${promptId}`, {
         method: "PATCH",
         body: JSON.stringify({
           prompt: post.prompt,
@@ -54,23 +59,19 @@ const UpdatePrompt = () => {
     getPromptDetails();
   }, [promptId]);
 
+  if (!promptId) {
+    return <div className="desc text-center">No prompt ID found</div>;
+  }
+
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <div>
-        {promptId ? (
-          <Form
-            type="Update"
-            post={post}
-            setPost={setPost}
-            submitting={submitting}
-            handleSubmit={updatePrompt}
-          />
-        ) : (
-          <div className="desc text-center">No prompt ID found</div>
-        )}
-      </div>
-    </Suspense>
+    <Form
+      type="Update"
+      post={post}
+      setPost={setPost}
+      submitting={submitting}
+      handleSubmit={updatePrompt}
+    />
   );
 };
 
-export default UpdatePrompt;
+export default UpdatePromptWrapper;
