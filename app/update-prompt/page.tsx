@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import Form from "@components/Form";
@@ -56,17 +57,19 @@ const UpdatePrompt = () => {
 
   return (
     <>
-      {promptId ? (
-        <Form
-          type="Update"
-          post={post}
-          setPost={setPost}
-          submitting={submitting}
-          handleSubmit={updatePrompt}
-        />
-      ) : (
-        <div className="desc text-center">No prompt ID found</div>
-      )}
+      <Suspense fallback={<div>Loading...</div>}>
+        {promptId ? (
+          <Form
+            type="Update"
+            post={post}
+            setPost={setPost}
+            submitting={submitting}
+            handleSubmit={updatePrompt}
+          />
+        ) : (
+          <div className="desc text-center">No prompt ID found</div>
+        )}
+      </Suspense>
     </>
   );
 };

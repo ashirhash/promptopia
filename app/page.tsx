@@ -13,7 +13,7 @@ const Home = () => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          userId: session?.user.id ,
+          userId: session?.user.id,
         },
       });
       const data = await response.json();
