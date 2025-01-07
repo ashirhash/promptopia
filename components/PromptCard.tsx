@@ -28,7 +28,6 @@ const PromptCard = ({
   const [hasInteracted, setHasInteracted] = useState(false);
   const { data: session }: any = useSession();
   const router = useRouter();
-  const userId = session?.user.id;
 
   const handleCopy = () => {
     setCopied(post.prompt);

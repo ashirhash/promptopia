@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { CrossIcon } from "./ui/Icons";
+import { useDebounce } from "@utils/hooks";
 
 const Search = ({
   searchText,
@@ -7,12 +8,20 @@ const Search = ({
   posts,
   setFilteredPosts,
 }: any) => {
+  // Local state for instant updates
+  const [localSearchText, setLocalSearchText] = useState(searchText);
+  const debouncedSearchText = useDebounce(localSearchText, 500);
+
+  useEffect(() => {
+    setSearchText(debouncedSearchText);
+  }, [debouncedSearchText, setSearchText]);
+
   const handleSearchChange = (e: any) => {
-    setSearchText(e.target.value);
+    setLocalSearchText(e.target.value);
   };
 
   const handleSearchDelete = () => {
-    setSearchText("");
+    setLocalSearchText("");
   };
 
   // Search filter
@@ -50,16 +59,18 @@ const Search = ({
         <input
           type="text"
           placeholder="Search for a tag or username"
-          value={searchText}
-          onChange={handleSearchChange}
+          value={localSearchText} // CHANGED
+          onChange={handleSearchChange} // CHANGED
           required
           className="search_input peer"
         />
         <CrossIcon
           width="19px"
           height="19px"
-          className={`${searchText ? "block" : "hidden"} cursor-pointer absolute z-10 right-2 top-[12px]`}
-          onClick={handleSearchDelete}
+          className={`${
+            localSearchText ? "block" : "hidden"
+          } cursor-pointer absolute z-10 right-2 top-[12px]`} // CHANGED
+          onClick={handleSearchDelete} // CHANGED
         />
       </div>
     </form>
