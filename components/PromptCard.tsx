@@ -1,11 +1,10 @@
 "use client";
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { HeartIcon } from "./ui/Icons";
-import { useDebounce } from "@utils/hooks";
-import { types } from "util";
+import { useDebounce, useTimeAgo } from "@utils/hooks";
 
 interface PromptCardProps {
   post: any;
@@ -36,6 +35,8 @@ const PromptCard = ({
   };
 
   const debLikes = useDebounce(likes, 1000);
+
+  const timestamp = useTimeAgo(post.createdAt)
 
   const handleLike = () => {
     if (session) {
@@ -84,8 +85,7 @@ const PromptCard = ({
   const handleUserClick = () => {
     if (isSameUser) {
       router.push(`/authors/${post.creator._id}`);
-    }
-    else if(session){
+    } else if (session) {
       router.push("/profile");
     }
   };
@@ -136,32 +136,37 @@ const PromptCard = ({
           >
             {post.tag}
           </p>
-          <div className="flex justify-between items-center gap-3 w-full mt-3">
-            <div
-              className="flex items-center gap-2 select-none cursor-pointer"
-              onClick={() => handleLike()}
-            >
-              <HeartIcon isActive={isLiked} />
-              <span className="font-inter text-sm text-gray-700">{likes}</span>
+          <div className="flex flex-col gap-3">
+            <div className="flex justify-between items-center gap-3 w-full mt-3">
+              <div
+                className="flex items-center gap-2 select-none cursor-pointer"
+                onClick={() => handleLike()}
+              >
+                <HeartIcon isActive={isLiked} />
+                <span className="font-inter text-sm text-gray-700">
+                  {likes}
+                </span>
+              </div>
+              <div className="flex gap-4">
+                {handleEdit && (
+                  <p
+                    className={`font-inter text-sm green_gradient cursor-pointer`}
+                    onClick={() => handleEdit(post)}
+                  >
+                    Edit
+                  </p>
+                )}
+                {handleDelete && (
+                  <p
+                    className="font-inter text-sm orange_gradient cursor-pointer"
+                    onClick={() => handleDelete(post)}
+                  >
+                    Delete
+                  </p>
+                )}
+              </div>
             </div>
-            <div className="flex gap-4">
-              {handleEdit && (
-                <p
-                  className={`font-inter text-sm green_gradient cursor-pointer`}
-                  onClick={() => handleEdit(post)}
-                >
-                  Edit
-                </p>
-              )}
-              {handleDelete && (
-                <p
-                  className="font-inter text-sm orange_gradient cursor-pointer"
-                  onClick={() => handleDelete(post)}
-                >
-                  Delete
-                </p>
-              )}
-            </div>
+            <span className=" font-satoshi tracking-wide font-light text-xs text-slate-500">{timestamp}</span>
           </div>
         </div>
       </div>
