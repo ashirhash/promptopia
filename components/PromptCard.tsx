@@ -29,8 +29,6 @@ const PromptCard = ({
   const { data: session }: any = useSession();
   const router = useRouter();
   const userId = session?.user.id;
-  console.log(userId);
-  
 
   const handleCopy = () => {
     setCopied(post.prompt);
