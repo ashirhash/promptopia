@@ -47,7 +47,6 @@ const PromptCard = ({
   };
 
   useEffect(() => {
-    // Update `isLiked` whenever `post.liked` changes after session is updated
     setIsLiked(post.liked);
   }, [post.liked]);
 

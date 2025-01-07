@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { CrossIcon } from "./ui/Icons";
 
 const Search = ({
   searchText,
@@ -8,6 +9,10 @@ const Search = ({
 }: any) => {
   const handleSearchChange = (e: any) => {
     setSearchText(e.target.value);
+  };
+
+  const handleSearchDelete = () => {
+    setSearchText("");
   };
 
   // Search filter
@@ -41,14 +46,22 @@ const Search = ({
       onSubmit={(e) => e.preventDefault()}
       className="relative w-full flex justify-center"
     >
-      <input
-        type="text"
-        placeholder="Search for a tag or username"
-        value={searchText}
-        onChange={handleSearchChange}
-        required
-        className="search_input peer"
-      />
+      <div className="relative w-full">
+        <input
+          type="text"
+          placeholder="Search for a tag or username"
+          value={searchText}
+          onChange={handleSearchChange}
+          required
+          className="search_input peer"
+        />
+        <CrossIcon
+          width="19px"
+          height="19px"
+          className={`${searchText ? "block" : "hidden"} cursor-pointer absolute z-10 right-2 top-[12px]`}
+          onClick={handleSearchDelete}
+        />
+      </div>
     </form>
   );
 };
