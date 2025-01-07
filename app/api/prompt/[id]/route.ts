@@ -20,7 +20,7 @@ export const GET = async (req: any, { params }: any) => {
 };
 
 export const PATCH = async (req: any, { params }: any) => {
-  const { prompt, tag } = await req.json();
+  const { prompt, tag, userId } = await req.json();
 
   try {
     await ConnectToDB();
@@ -29,6 +29,12 @@ export const PATCH = async (req: any, { params }: any) => {
 
     if (!existingPrompt) {
       return new Response("Prompt not found", { status: 404 });
+    }
+
+    const creatorId = existingPrompt.creator.toString();
+
+    if (creatorId !== userId) {
+      return new Response("Access denied, invalid user", { status: 401 });
     }
 
     existingPrompt.prompt = prompt;
@@ -52,7 +58,7 @@ export const DELETE = async (req: any, { params }: any) => {
     await Prompt.findByIdAndDelete(params.id);
 
     return new Response("Prompt deleted successfully", {
-        status: 200
+      status: 200,
     });
   } catch (error) {
     return new Response("Failed to update prompt", {

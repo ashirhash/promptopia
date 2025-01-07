@@ -7,14 +7,15 @@ import { useRouter } from "next/navigation";
 import Form from "@components/Form";
 
 const CreatePrompt = () => {
-  const router = useRouter();
   const { data: session }: any = useSession();
+
+  const router = useRouter();
 
   const [submitting, setSubmitting] = useState(false);
   const [post, setPost] = useState({
     prompt: "",
     tag: "",
-    likes: 0
+    likes: 0,
   });
 
   const createPrompt = async (e: any) => {
@@ -40,6 +41,14 @@ const CreatePrompt = () => {
       setSubmitting(false);
     }
   };
+
+  if (!session) {
+    return (
+      <div>
+        <p className="desc">Please sign in to continue</p>
+      </div>
+    );
+  }
 
   return (
     <Form
