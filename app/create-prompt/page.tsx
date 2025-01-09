@@ -19,13 +19,12 @@ const CreatePrompt = () => {
     tag: "",
     likes: 0,
     images: [] as File[],
+    imageUrls: [] as string[],
   });
 
   const createPrompt = async (e: any) => {
     e.preventDefault();
     setSubmitting(true);
-
-    console.log(post.images);
 
     const imageUrls = await Promise.all(
       post.images.map(async (image) => {
@@ -33,7 +32,7 @@ const CreatePrompt = () => {
           const res = await edgestore.publicImages.upload({ file: image });
           return res.url;
         } catch (error) {
-          console.log(error);
+          console.error(error);
         }
       })
     );

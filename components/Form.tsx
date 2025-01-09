@@ -1,29 +1,29 @@
 import Link from "next/link";
-import { useState } from "react";
 import { CloudIcon, CrossIcon } from "./ui/Icons";
 
 const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
-  const [newUrls, setNewUrls] = useState<string[]>([]);
-
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFiles = e.target.files ? Array.from(e.target.files) : [];
 
+    if (selectedFiles.length === 0) return;
+
+    const imageUrls = selectedFiles.map((file) => URL.createObjectURL(file));
+
     setPost((prevPost: any) => ({
       ...prevPost,
-      images: [...prevPost.images, ...selectedFiles], // append temporary image URLs
+      images: [...(prevPost.images || []), ...selectedFiles], // append temporary image URLs
+      imageUrls: [...(prevPost.imageUrls || []), ...imageUrls]
     }));
-
-    // Create temporary URLs for the selected files
-    const imageUrls = selectedFiles.map((file) => URL.createObjectURL(file));
-    setNewUrls((prev) => [...prev, ...imageUrls]);
   };
 
   const handleDeleteImage = (index: number) => {
-    setNewUrls((prev) => prev.filter((_, number) => number !== index));
 
-    setPost((prevPost: any) => ({
-      ...prevPost,
-      images: prevPost.images.filter(
+    setPost((prev: any) => ({
+      ...prev,
+      images: prev.images.filter(
+        (_: any, number: number) => number !== index
+      ),
+      imageUrls: prev.imageUrls.filter(
         (_: any, number: number) => number !== index
       ),
     }));
@@ -118,7 +118,7 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
               />
             </label>
             <div className="flex flex-wrap gap-1">
-              {newUrls.map((image: string, index: number) => {
+              {post.imageUrls.map((image: string, index: number) => {
                 return (
                   // delete the image on click of this wrapper
                   <div

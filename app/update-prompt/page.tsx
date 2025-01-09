@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Form from "@components/Form";
+import { useEdgeStore } from "@utils/contexts";
 
 const UpdatePromptWrapper = () => {
   return (
@@ -15,6 +16,7 @@ const UpdatePromptWrapper = () => {
 
 const UpdatePrompt = () => {
   const router = useRouter();
+  const { edgestore } = useEdgeStore();
   const promptId = useSearchParams().get("id");
   const { data: session, status }: any = useSession();
 
@@ -23,7 +25,8 @@ const UpdatePrompt = () => {
   const [post, setPost] = useState({
     prompt: "",
     tag: "",
-    images: []
+    images: [] as File[] | string[],
+    imageUrls: [] as string[],
   });
 
   useEffect(() => {
@@ -42,7 +45,8 @@ const UpdatePrompt = () => {
         setPost({
           prompt: data.prompt,
           tag: data.tag,
-          images: data.images
+          images: data.imageUrls,
+          imageUrls: data.imageUrls,
         });
 
         setIsUserAllowed(1); // Allowed
@@ -61,6 +65,21 @@ const UpdatePrompt = () => {
     e.preventDefault();
     setSubmitting(true);
 
+    const imageUrls = await Promise.all(
+      post.images.map(async (image) => {
+        if (image instanceof File) {
+          try {
+            const res = await edgestore.publicImages.upload({ file: image });
+            return res.url;
+          } catch (error) {
+            console.error(error);
+          }
+        } else {
+          return image;
+        }
+      })
+    );
+
     if (!promptId) return alert("Prompt ID not found");
 
     try {
@@ -70,11 +89,24 @@ const UpdatePrompt = () => {
           userId: session?.user.id,
           prompt: post.prompt,
           tag: post.tag,
-          images: post.images
+          imageUrls: imageUrls,
         }),
       });
       if (response.ok) {
         router.push("/");
+        const data = await response.json();
+        const { replacedUrls } = data;
+        await Promise.all(
+          replacedUrls.map(async (url: string) => {
+            try {
+              await edgestore.publicImages.delete({
+                url: url,
+              });
+            } catch (error) {
+              console.error(`Failed to delete image with URL: ${url}`, error);
+            }
+          })
+        );
       }
     } catch (error) {
       console.error(error);

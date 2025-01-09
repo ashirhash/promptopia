@@ -36,7 +36,7 @@ const PromptCard = ({
 
   const debLikes = useDebounce(likes, 1000);
 
-  const timestamp = useTimeAgo(post.createdAt)
+  const timestamp = useTimeAgo(post.createdAt);
 
   const handleLike = () => {
     if (session) {
@@ -94,6 +94,9 @@ const PromptCard = ({
     <div className="prompt_card">
       <div className="flex justify-between items-start gap-5">
         <div className="flex-1 flex flex-col item items-start justify-between gap-3">
+          {post.imageUrls && post.imageUrls.length > 0 && (
+            <img src={post.imageUrls[0]} alt="post cover image" className="rounded-xl w-full aspect-video object-cover" />
+          )}
           <div className="flex gap-3 items-center w-full justify-between ">
             <div
               onClick={() => handleUserClick()}
@@ -166,7 +169,9 @@ const PromptCard = ({
                 )}
               </div>
             </div>
-            <span className=" font-satoshi tracking-wide font-light text-xs text-slate-500">{timestamp}</span>
+            <span className=" font-satoshi tracking-wide font-light text-xs text-slate-500">
+              {timestamp}
+            </span>
           </div>
         </div>
       </div>

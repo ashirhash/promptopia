@@ -1,5 +1,5 @@
-import { initEdgeStore } from '@edgestore/server';
-import { createEdgeStoreNextHandler } from '@edgestore/server/adapters/next/app';
+import { initEdgeStore } from "@edgestore/server";
+import { createEdgeStoreNextHandler } from "@edgestore/server/adapters/next/app";
 
 const es = initEdgeStore.create();
 
@@ -8,7 +8,10 @@ const es = initEdgeStore.create();
  */
 const edgeStoreRouter = es.router({
   publicFiles: es.fileBucket(),
-  publicImages: es.imageBucket(),
+  publicImages: es.imageBucket().beforeDelete(({ ctx, fileInfo }) => {
+    console.log("beforeDelete", ctx, fileInfo);
+    return true; // allow delete
+  }),
 });
 
 const handler = createEdgeStoreNextHandler({

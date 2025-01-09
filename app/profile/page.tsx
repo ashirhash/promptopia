@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Profile from "@components/Profile";
+import { useEdgeStore } from "@utils/contexts";
 
 const MyProfile = () => {
   const [posts, setPosts] = useState([]);
   const { data: session }: any = useSession();
   const router = useRouter();
+  const { edgestore } = useEdgeStore();
 
   const handleEdit = (post: any) => {
     router.push(`/update-prompt?id=${post._id}`);
@@ -20,11 +22,24 @@ const MyProfile = () => {
 
     if (hasConfirmed) {
       try {
-        await fetch(`/api/prompt/${post._id.toString()}`, {
+        const response = await fetch(`/api/prompt/${post._id.toString()}`, {
           method: "DELETE",
         });
         const filteredPosts = posts.filter((p: any) => p._id !== post._id);
         setPosts(filteredPosts);
+        const data = await response.json();
+        const { existingImageUrls } = data;
+        await Promise.all(
+          existingImageUrls.map(async (url: string) => {
+            try {
+              await edgestore.publicImages.delete({
+                url: url,
+              });
+            } catch (error) {
+              console.error(`Failed to delete image with URL: ${url}`, error);
+            }
+          })
+        );
       } catch (error) {
         console.error("error deleting post", error);
       }
@@ -46,7 +61,7 @@ const MyProfile = () => {
       <div>
         <p className="desc">Please sign in to continue</p>
       </div>
-    )
+    );
   }
 
   return (

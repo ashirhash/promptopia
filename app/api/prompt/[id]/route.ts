@@ -20,7 +20,7 @@ export const GET = async (req: any, { params }: any) => {
 };
 
 export const PATCH = async (req: any, { params }: any) => {
-  const { prompt, tag, userId } = await req.json();
+  const { userId, prompt, tag, imageUrls } = await req.json();
 
   try {
     await ConnectToDB();
@@ -37,13 +37,25 @@ export const PATCH = async (req: any, { params }: any) => {
       return new Response("Access denied, invalid user", { status: 401 });
     }
 
+    // Find the replaced URLs
+    const existingImageUrls = existingPrompt.imageUrls || [];
+    const replacedUrls = existingImageUrls.filter(
+      (url: string) => !imageUrls.includes(url)
+    );
+
+    // Update the prompt details
     existingPrompt.prompt = prompt;
     existingPrompt.tag = tag;
+    existingPrompt.imageUrls = imageUrls;
 
     await existingPrompt.save();
-    return new Response(JSON.stringify(existingPrompt), {
-      status: 200,
-    });
+
+    return new Response(
+      JSON.stringify({
+        replacedUrls,
+      }),
+      { status: 200 }
+    );
   } catch (error) {
     return new Response("Failed to update prompt", {
       status: 500,
@@ -55,11 +67,18 @@ export const DELETE = async (req: any, { params }: any) => {
   try {
     await ConnectToDB();
 
-    await Prompt.findByIdAndDelete(params.id);
+    const existingPrompt = await Prompt.findByIdAndDelete(params.id);
 
-    return new Response("Prompt deleted successfully", {
-      status: 200,
-    });
+    const existingImageUrls = existingPrompt.imageUrls || [];
+
+    return new Response(
+      JSON.stringify({
+        existingImageUrls,
+      }),
+      {
+        status: 200,
+      }
+    );
   } catch (error) {
     return new Response("Failed to update prompt", {
       status: 500,
