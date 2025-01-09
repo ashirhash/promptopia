@@ -7,22 +7,28 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
 
     if (selectedFiles.length === 0) return;
 
+    console.log("selectedFiles");
+    console.log(selectedFiles);
+
     const imageUrls = selectedFiles.map((file) => URL.createObjectURL(file));
 
+    // uncomment to unable multifile upload functionality
+    // setPost((prevPost: any) => ({
+    //   ...prevPost,
+    //   images: [...(prevPost.images || []), ...selectedFiles], // append temporary image URLs
+    //   imageUrls: [...(prevPost.imageUrls || []), ...imageUrls]
+    // }));
     setPost((prevPost: any) => ({
       ...prevPost,
-      images: [...(prevPost.images || []), ...selectedFiles], // append temporary image URLs
-      imageUrls: [...(prevPost.imageUrls || []), ...imageUrls]
+      images: [selectedFiles[0]], // append temporary image URLs
+      imageUrls: [imageUrls[0] || prevPost.imageUrls?.[0]],
     }));
   };
 
   const handleDeleteImage = (index: number) => {
-
     setPost((prev: any) => ({
       ...prev,
-      images: prev.images.filter(
-        (_: any, number: number) => number !== index
-      ),
+      images: prev.images.filter((_: any, number: number) => number !== index),
       imageUrls: prev.imageUrls.filter(
         (_: any, number: number) => number !== index
       ),
@@ -111,7 +117,6 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
               <input
                 id="dropzone-file"
                 accept="image/*"
-                multiple
                 type="file"
                 className="hidden"
                 onChange={handleImageChange}
