@@ -136,7 +136,7 @@ const PromptCard = ({
           >
             {post.tag}
           </p>
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 w-full">
             <div className="flex justify-between items-center gap-3 w-full mt-3">
               <div
                 className="flex items-center gap-2 select-none cursor-pointer"

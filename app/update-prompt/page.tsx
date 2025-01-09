@@ -23,6 +23,7 @@ const UpdatePrompt = () => {
   const [post, setPost] = useState({
     prompt: "",
     tag: "",
+    images: []
   });
 
   useEffect(() => {
@@ -41,6 +42,7 @@ const UpdatePrompt = () => {
         setPost({
           prompt: data.prompt,
           tag: data.tag,
+          images: data.images
         });
 
         setIsUserAllowed(1); // Allowed
@@ -68,6 +70,7 @@ const UpdatePrompt = () => {
           userId: session?.user.id,
           prompt: post.prompt,
           tag: post.tag,
+          images: post.images
         }),
       });
       if (response.ok) {

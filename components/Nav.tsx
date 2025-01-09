@@ -4,12 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import { signIn, signOut, useSession, getProviders } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 const Nav = () => {
   const { data: session } = useSession();
 
-  const router = useRouter();
   const [providers, setProviders] = useState<any>(null);
   const [toggleDropdown, setToggleDropdown] = useState(false);
 
@@ -40,7 +38,7 @@ const Nav = () => {
         {session?.user ? (
           <div className="flex items-center gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">
-              Create Post
+              Create Prompt
             </Link>
 
             <button

@@ -18,8 +18,6 @@ const Home = () => {
       });
       const data = await response.json();
       setPosts(data);
-      console.log(data);
-      
     };
     fetchPosts();
   }, [session]);
@@ -29,13 +27,12 @@ const Home = () => {
       <h1 className="head_text text-center">
         Discover and Share
         <br className="max-md:hidden" />
-        <span className="orange_gradient text-center">AI-Powered Prompts</span>
+        <span className="orange_gradient text-center"> AI-Powered Prompts</span>
       </h1>
       <p className="desc text-center">
         Promptopia is an open-source AI tool for modern world to discover,
         create and share creative prompts
       </p>
-
       <Feed posts={posts} setPosts={setPosts} />
     </section>
   );

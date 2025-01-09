@@ -3,11 +3,13 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useEdgeStore } from "@utils/contexts";
 
 import Form from "@components/Form";
 
 const CreatePrompt = () => {
   const { data: session }: any = useSession();
+  const { edgestore } = useEdgeStore();
 
   const router = useRouter();
 
@@ -16,11 +18,25 @@ const CreatePrompt = () => {
     prompt: "",
     tag: "",
     likes: 0,
+    images: [] as File[],
   });
 
   const createPrompt = async (e: any) => {
     e.preventDefault();
     setSubmitting(true);
+
+    console.log(post.images);
+
+    const imageUrls = await Promise.all(
+      post.images.map(async (image) => {
+        try {
+          const res = await edgestore.publicImages.upload({ file: image });
+          return res.url;
+        } catch (error) {
+          console.log(error);
+        }
+      })
+    );
 
     try {
       const response = await fetch("api/prompt/new", {
@@ -30,6 +46,7 @@ const CreatePrompt = () => {
           userId: session?.user.id,
           tag: post.tag,
           likes: post.likes,
+          images: imageUrls,
         }),
       });
       if (response.ok) {

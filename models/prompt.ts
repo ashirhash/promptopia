@@ -18,7 +18,8 @@ const PromptSchema = new Schema({
     type: Number,
     default: 0,
     required: [true, "Likes are required."],
-  }
+  },
+  imageUrls: { type: [String], default: [] },
 });
 
 const Prompt = models.Prompt || model("Prompt", PromptSchema);
