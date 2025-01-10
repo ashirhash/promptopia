@@ -13,6 +13,10 @@ const Search = ({
   const debouncedSearchText = useDebounce(localSearchText, 500);
 
   useEffect(() => {
+    setLocalSearchText(searchText);
+  }, [searchText]);
+
+  useEffect(() => {
     setSearchText(debouncedSearchText);
   }, [debouncedSearchText, setSearchText]);
 
