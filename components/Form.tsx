@@ -7,8 +7,15 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
 
     if (selectedFiles.length === 0) return;
 
-    console.log("selectedFiles");
-    console.log(selectedFiles);
+    const validFiles = selectedFiles.filter((file) => file.size < 500 * 1024);
+
+    if (validFiles.length === 0) {
+      alert("Please select images smaller than 500 KB.");
+      return;
+    }
+
+    console.log("validFiles");
+    console.log(validFiles);
 
     const imageUrls = selectedFiles.map((file) => URL.createObjectURL(file));
 
@@ -51,7 +58,28 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
       >
         <label>
           <span className="font-satoshi font-semibold text-base text-gray-700">
-            Your AI Prompt
+            Post Title {" "}
+            <span className="text-sm after:text-gray-500">
+              (max 80 characters)
+            </span>
+          </span>
+          <input
+            maxLength={80}
+            value={post.postTitle}
+            onChange={(e) =>
+              setPost({
+                ...post,
+                postTitle: e.target.value,
+              })
+            }
+            placeholder="Write your title here..."
+            required
+            className="form_input"
+          />
+        </label>
+        <label>
+          <span className="font-satoshi font-semibold text-base text-gray-700">
+            Your Awesome AI Prompt
           </span>
 
           <textarea
@@ -146,6 +174,28 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
             </div>
           </div>
         </div>
+
+        <label>
+          <span className="font-satoshi font-semibold text-base text-gray-700">
+            Prompt Details {" "}
+            <span className="text-sm after:text-gray-500">
+              (in .md)
+            </span>
+          </span>
+          <textarea
+            maxLength={1000}
+            value={post.md}
+            onChange={(e) =>
+              setPost({
+                ...post,
+                md: e.target.value,
+              })
+            }
+            placeholder="Write your title here..."
+            required
+            className="form_textarea"
+          />
+        </label>
 
         <div className="flex justify-end items-center mb-5 gap-4">
           <Link href="/" className="text-gray-600 md:text-base text-sm">
