@@ -1,7 +1,8 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
-import { EdgeStoreProvider } from "@utils/contexts";
+import { EdgeStoreProvider } from "@utils/edgestore";
+import { LoaderProvider } from "@app/contexts/LoaderContext";
 
 interface ProviderProps {
   children: React.ReactNode;
@@ -11,7 +12,9 @@ interface ProviderProps {
 const Provider = ({ children, session }: ProviderProps) => {
   return (
     <SessionProvider session={session}>
-      <EdgeStoreProvider >{children}</EdgeStoreProvider>
+      <EdgeStoreProvider>
+        <LoaderProvider>{children}</LoaderProvider>
+      </EdgeStoreProvider>
     </SessionProvider>
   );
 };

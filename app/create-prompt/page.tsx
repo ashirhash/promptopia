@@ -3,7 +3,8 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEdgeStore } from "@utils/contexts";
+import { useEdgeStore } from "@utils/edgestore";
+import { useLoader } from "@app/contexts/LoaderContext";
 
 import Form from "@components/Form";
 
@@ -12,10 +13,13 @@ const CreatePrompt = () => {
   const { edgestore } = useEdgeStore();
 
   const router = useRouter();
+  const { setGlobalLoading } = useLoader();
 
   const [submitting, setSubmitting] = useState(false);
   const [post, setPost] = useState({
+    postTitle: "",
     prompt: "",
+    md: "",
     tag: "",
     likes: 0,
     images: [] as File[],
@@ -25,6 +29,7 @@ const CreatePrompt = () => {
   const createPrompt = async (e: any) => {
     e.preventDefault();
     setSubmitting(true);
+    setGlobalLoading(true);
 
     const imageUrls = await Promise.all(
       post.images.map(async (image) => {
@@ -55,6 +60,7 @@ const CreatePrompt = () => {
       console.error(error);
     } finally {
       setSubmitting(false);
+      setGlobalLoading(false);
     }
   };
 
