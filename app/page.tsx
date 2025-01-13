@@ -12,7 +12,7 @@ const Home = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        setGlobalLoading(true)
+        setGlobalLoading(true);
         const response = await fetch(`/api/prompt`, {
           method: "GET",
           headers: {
@@ -22,11 +22,10 @@ const Home = () => {
         });
         const data = await response.json();
         setPosts(data);
-      } catch (error) { 
+      } catch (error) {
         console.error("Error fetching posts", error);
-      }
-      finally {
-        setGlobalLoading(false)
+      } finally {
+        setGlobalLoading(false);
       }
     };
     fetchPosts();

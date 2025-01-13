@@ -5,6 +5,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { HeartIcon } from "./ui/Icons";
 import { useDebounce, useTimeAgo } from "@utils/hooks";
+import Link from "next/link";
 
 interface PromptCardProps {
   post: any;
@@ -28,14 +29,14 @@ const PromptCard = ({
   const { data: session }: any = useSession();
   const router = useRouter();
 
-  const handleCopy = () => {
+  const handleCopy = (e:any) => {
+    e.preventDefault();
     setCopied(post.prompt);
     navigator.clipboard.writeText(post.prompt);
     setTimeout(() => setCopied(""), 3000);
   };
 
   const debLikes = useDebounce(likes, 1000);
-
   const timestamp = useTimeAgo(post.createdAt);
 
   const handleLike = () => {
@@ -82,16 +83,12 @@ const PromptCard = ({
   }, [debLikes]);
 
   const isSameUser = session?.user.id !== post.creator._id;
-  const handleUserClick = () => {
-    if (isSameUser) {
-      router.push(`/authors/${post.creator._id}`);
-    } else if (session) {
-      router.push("/profile");
-    }
-  };
 
   return (
-    <div className="prompt_card" >
+    <Link
+      href={`/prompts/${post._id}`}
+      className={`prompt_card cursor-pointer hover:bg-slate-200 transition`}
+    >
       <div className="flex justify-between items-start gap-5">
         <div className="flex-1 flex flex-col item items-start justify-between gap-3">
           {post.imageUrls && post.imageUrls.length > 0 && (
@@ -101,10 +98,17 @@ const PromptCard = ({
               className="rounded-xl w-full aspect-video object-cover"
             />
           )}
-          <div className="flex gap-3 items-center w-full justify-between ">
-            <div
-              onClick={() => handleUserClick()}
-              className={`flex gap-3 items-center cursor-pointer p-2 hover:bg-slate-200 transition rounded-lg`}
+          <div className="disable_parent_hover flex gap-3 items-center w-full justify-between ">
+            <Link
+              href={
+                isSameUser
+                  ? `/authors/${post.creator._id}`
+                  : session
+                  ? "/profile"
+                  : "/"
+              }
+              // onClick={() => handleUserClick()}
+              className={`flex gap-3 relative z-10 items-center cursor-pointer p-2 hover:bg-slate-200 transition rounded-lg`}
             >
               <Image
                 src={post.creator.image}
@@ -122,7 +126,7 @@ const PromptCard = ({
                   {post.creator.email}
                 </p>
               </div>
-            </div>
+            </Link>
 
             <div className="copy_btn " onClick={handleCopy}>
               <Image
@@ -149,7 +153,7 @@ const PromptCard = ({
                 className="flex items-center gap-2 select-none cursor-pointer"
                 onClick={() => handleLike()}
               >
-                <HeartIcon isActive={isLiked} />
+                <HeartIcon className="disable_parent_hover hover:bg-slate-300 transition " isActive={isLiked} />
                 <span className="font-inter text-sm text-gray-700">
                   {likes}
                 </span>
@@ -179,7 +183,7 @@ const PromptCard = ({
           </div>
         </div>
       </div>
-    </div>
+    </Link>
   );
 };
 

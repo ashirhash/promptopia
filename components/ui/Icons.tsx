@@ -8,13 +8,13 @@ export const HeartIcon = ({
   ...props
 }) => {
   return (
-    <div className="flex justify-center items-start p-[6.5px] bg-accent-gray rounded-full cursor-pointer">
+    <div
+      className={`flex justify-center items-start p-[6.5px] bg-accent-gray rounded-full cursor-pointer ${className}`}
+    >
       <svg
         viewBox="0 0 256 256"
         xmlns="http://www.w3.org/2000/svg"
-        className={`${
-          isActive ? "animate-like" : ""
-        } will-change-transform ${className}`}
+        className={`${isActive ? "animate-like" : ""} will-change-transform`}
         width={size}
         height={size}
         {...props} // Allow passing additional props like `onClick`
