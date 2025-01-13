@@ -14,12 +14,9 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
       return;
     }
 
-    console.log("validFiles");
-    console.log(validFiles);
-
     const imageUrls = selectedFiles.map((file) => URL.createObjectURL(file));
 
-    // uncomment to unable multifile upload functionality
+    // uncomment to enable multifile upload functionality
     // setPost((prevPost: any) => ({
     //   ...prevPost,
     //   images: [...(prevPost.images || []), ...selectedFiles], // append temporary image URLs

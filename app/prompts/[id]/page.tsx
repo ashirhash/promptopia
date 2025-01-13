@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
@@ -18,17 +17,12 @@ const Page = ({ params }: PromptProfileProps) => {
   const [post, setPost] = useState<any>({});
   const [timestamps, setTimestamps] = useState<string>("");
   const { id } = params;
-  const router = useRouter();
 
   useEffect(() => {
     if (post.createdAt) {
       setTimestamps(useTimeAgo(post?.createdAt));
     }
   }, [post]);
-
-  const handleUserClick = () => {
-    router.push(`/authors/${post.creator._id}`);
-  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -38,7 +32,6 @@ const Page = ({ params }: PromptProfileProps) => {
         });
         if (!response.ok) throw new Error("Network response was not ok");
         const post = await response.json();
-        console.log(post);
         setPost(post);
       } catch (error) {
         console.error("Failed to fetch user data:", error);
@@ -70,7 +63,7 @@ const Page = ({ params }: PromptProfileProps) => {
       <div className="flex flex-col justify-start items-start md:flex-row gap-5">
         {post?.imageUrls[0] && (
           <>
-            <div className="md:max-w-[75%] aspect-video flex justify-start">
+            <div className="md:max-w-[75%] w-full aspect-video flex justify-start">
               <img
                 src={post.imageUrls[0]}
                 className="h-full w-full object-cover rounded-xl"
@@ -79,9 +72,9 @@ const Page = ({ params }: PromptProfileProps) => {
             </div>
           </>
         )}
-        <div className="flex-grow">
-          <div
-            onClick={() => handleUserClick()}
+        <div className="">
+          <Link
+            href={`/authors/${post.creator._id}`}
             className={`flex gap-3 items-center cursor-pointer hover:bg-slate-200 transition rounded-lg mb-3 p-2`}
           >
             <Image
@@ -100,7 +93,7 @@ const Page = ({ params }: PromptProfileProps) => {
                 {post.creator.email}
               </p>
             </div>
-          </div>
+          </Link>
           <p
             className="font-inter pl-2 text-sm blue_gradient cursor-pointer"
             // onClick={() => handleTagClick && handleTagClick(post.tag)}

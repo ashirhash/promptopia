@@ -5,7 +5,6 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { HeartIcon } from "./ui/Icons";
 import { useDebounce, useTimeAgo } from "@utils/hooks";
-import Link from "next/link";
 
 interface PromptCardProps {
   post: any;
@@ -29,7 +28,7 @@ const PromptCard = ({
   const { data: session }: any = useSession();
   const router = useRouter();
 
-  const handleCopy = (e:any) => {
+  const handleCopy = (e: any) => {
     e.preventDefault();
     setCopied(post.prompt);
     navigator.clipboard.writeText(post.prompt);
@@ -39,7 +38,8 @@ const PromptCard = ({
   const debLikes = useDebounce(likes, 1000);
   const timestamp = useTimeAgo(post.createdAt);
 
-  const handleLike = () => {
+  const handleLike = (e: any) => {
+    e.preventDefault();
     if (session) {
       setHasInteracted(true);
       setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
@@ -84,9 +84,21 @@ const PromptCard = ({
 
   const isSameUser = session?.user.id !== post.creator._id;
 
+  const handleCardClick = (e: any) => {
+    router.push(`/prompts/${post._id}`);
+  };
+
+  const handleUserClick = (e: any) => {
+    e.stopPropagation();
+    router.push(
+      isSameUser ? `/authors/${post.creator._id}` : session ? "/profile" : "/"
+    );
+
+  };
+
   return (
-    <Link
-      href={`/prompts/${post._id}`}
+    <div
+      onClick={handleCardClick}
       className={`prompt_card cursor-pointer hover:bg-slate-200 transition`}
     >
       <div className="flex justify-between items-start gap-5">
@@ -98,17 +110,10 @@ const PromptCard = ({
               className="rounded-xl w-full aspect-video object-cover"
             />
           )}
-          <div className="disable_parent_hover flex gap-3 items-center w-full justify-between ">
-            <Link
-              href={
-                isSameUser
-                  ? `/authors/${post.creator._id}`
-                  : session
-                  ? "/profile"
-                  : "/"
-              }
-              // onClick={() => handleUserClick()}
-              className={`flex gap-3 relative z-10 items-center cursor-pointer p-2 hover:bg-slate-200 transition rounded-lg`}
+          <div className="disable_parent_hover  flex gap-3 items-center w-full justify-between ">
+            <div
+              onClick={handleUserClick}
+              className={`flex gap-3 relative z-10 items-center cursor-pointer p-2 hover:bg-slate-200 transition rounded-md`}
             >
               <Image
                 src={post.creator.image}
@@ -126,7 +131,7 @@ const PromptCard = ({
                   {post.creator.email}
                 </p>
               </div>
-            </Link>
+            </div>
 
             <div className="copy_btn " onClick={handleCopy}>
               <Image
@@ -150,30 +155,37 @@ const PromptCard = ({
           <div className="flex flex-col gap-3 w-full">
             <div className="flex justify-between items-center gap-3 w-full mt-3">
               <div
-                className="flex items-center gap-2 select-none cursor-pointer"
-                onClick={() => handleLike()}
+                className="flex items-center disable_parent_hover gap-2 select-none cursor-pointer"
+                onClick={handleLike}
               >
-                <HeartIcon className="disable_parent_hover hover:bg-slate-300 transition " isActive={isLiked} />
+                <HeartIcon
+                  className=" hover:bg-slate-300 transition "
+                  isActive={isLiked}
+                />
                 <span className="font-inter text-sm text-gray-700">
                   {likes}
                 </span>
               </div>
               <div className="flex gap-4">
                 {handleEdit && (
-                  <p
-                    className={`font-inter text-sm green_gradient cursor-pointer`}
+                  <button
+                    type="button"
+                    role="button"
+                    className={`disable_parent_hover hover:underline font-inter text-sm green_gradient cursor-pointer`}
                     onClick={() => handleEdit(post)}
                   >
                     Edit
-                  </p>
+                  </button>
                 )}
                 {handleDelete && (
-                  <p
-                    className="font-inter text-sm orange_gradient cursor-pointer"
+                  <button
+                    type="button"
+                    role="button"
+                    className="font-inter disable_parent_hover hover:underline text-sm orange_gradient cursor-pointer"
                     onClick={() => handleDelete(post)}
                   >
                     Delete
-                  </p>
+                  </button>
                 )}
               </div>
             </div>
@@ -183,7 +195,7 @@ const PromptCard = ({
           </div>
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 

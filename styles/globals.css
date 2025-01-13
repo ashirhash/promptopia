@@ -154,7 +154,7 @@ html {
 
 /* PromptCard Component */
 .prompt_card:has(.disable_parent_hover:hover) {
-  @apply bg-white;
+  @apply bg-white/35;
 }
 
 .prompt_card {
