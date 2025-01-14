@@ -57,12 +57,12 @@ const Search = ({
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="relative w-full flex justify-center"
+      className="relative w-full"
     >
       <div className="relative w-full">
         <input
           type="text"
-          placeholder="Search for a tag or username"
+          placeholder="Search for titles, #tags or @usernames"
           value={localSearchText} // CHANGED
           onChange={handleSearchChange} // CHANGED
           required

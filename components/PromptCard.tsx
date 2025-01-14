@@ -1,10 +1,11 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { HeartIcon } from "./ui/Icons";
 import { useDebounce, useTimeAgo } from "@utils/hooks";
+import { PopupContext } from "./Feed";
 
 interface PromptCardProps {
   post: any;
@@ -22,6 +23,8 @@ const PromptCard = ({
   const [copied, setCopied] = useState("");
   const [likes, setLikes] = useState<number>(post.likes);
   const [isLiked, setIsLiked] = useState<boolean>(post.liked);
+
+  
 
   // disable liking unless user interacts with the button for avoiding side effects
   const [hasInteracted, setHasInteracted] = useState(false);
@@ -88,12 +91,19 @@ const PromptCard = ({
     router.push(`/prompts/${post._id}`);
   };
 
+  const { setIsOpen, setSelectedImage } = useContext(PopupContext);
+
+  const handleImageClick = (e: any, src: string) => {
+    e.stopPropagation();
+    setIsOpen(true);
+    setSelectedImage(src);
+  };
+
   const handleUserClick = (e: any) => {
     e.stopPropagation();
     router.push(
       isSameUser ? `/authors/${post.creator._id}` : session ? "/profile" : "/"
     );
-
   };
 
   return (
@@ -104,13 +114,15 @@ const PromptCard = ({
       <div className="flex justify-between items-start gap-5">
         <div className="flex-1 flex flex-col item items-start justify-between gap-3">
           {post.imageUrls && post.imageUrls.length > 0 && (
-            <img
-              src={post.imageUrls[0]}
-              alt="post cover image"
-              className="rounded-xl w-full aspect-video object-cover"
-            />
+            <div className="disable_parent_hover relative z-10 transition hover:scale-105 will-change-transform" onClick={(e) => handleImageClick(e, post.imageUrls[0])}>
+              <img
+                src={post.imageUrls[0]}
+                alt="post cover image"
+                className="rounded-xl w-full aspect-video object-cover"
+              />
+            </div>
           )}
-          <div className="disable_parent_hover  flex gap-3 items-center w-full justify-between ">
+          <div className="disable_parent_hover flex gap-3 items-center w-full justify-between ">
             <div
               onClick={handleUserClick}
               className={`flex gap-3 relative z-10 items-center cursor-pointer p-2 hover:bg-slate-200 transition rounded-md`}

@@ -62,11 +62,11 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
           </span>
           <input
             maxLength={80}
-            value={post.postTitle}
+            value={post.title}
             onChange={(e) =>
               setPost({
                 ...post,
-                postTitle: e.target.value,
+                title: e.target.value,
               })
             }
             placeholder="Write your title here..."
@@ -174,10 +174,8 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
 
         <label>
           <span className="font-satoshi font-semibold text-base text-gray-700">
-            Prompt Details {" "}
-            <span className="text-sm after:text-gray-500">
-              (in .md)
-            </span>
+            Prompt Details{" "}
+            <span className="text-sm after:text-gray-500">(in .md)</span>
           </span>
           <textarea
             maxLength={1000}

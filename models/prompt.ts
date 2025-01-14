@@ -6,6 +6,10 @@ const PromptSchema = new Schema({
     ref: "User",
   },
   createdAt: { type: Date, default: Date.now },
+  title: {
+    type: String,
+    required: [true, "Title is required."],
+  },
   prompt: {
     type: String,
     required: [true, "Prompt is required."],

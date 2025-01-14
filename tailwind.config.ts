@@ -32,6 +32,7 @@ const config: Config = {
         like: "like_effect 400ms ease",
         spin: "spin 2s linear infinite",
         fadeIn: "fadeIn 0.5s ease-in-out",
+        fadeInFast: "fadeIn 0.2s ease-in-out",
       },
     },
   },
