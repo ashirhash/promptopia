@@ -9,7 +9,7 @@ import { PopupContext } from "./Feed";
 
 interface PromptCardProps {
   post: any;
-  handleTagClick?: ({}) => void;
+  handleTagClick?: (e: any, postTag: string) => void;
   handleDelete?: (post: number) => void;
   handleEdit?: (post: number) => void;
 }
@@ -24,15 +24,13 @@ const PromptCard = ({
   const [likes, setLikes] = useState<number>(post.likes);
   const [isLiked, setIsLiked] = useState<boolean>(post.liked);
 
-  
-
   // disable liking unless user interacts with the button for avoiding side effects
   const [hasInteracted, setHasInteracted] = useState(false);
   const { data: session }: any = useSession();
   const router = useRouter();
 
   const handleCopy = (e: any) => {
-    e.preventDefault();
+    e.stopPropagation();
     setCopied(post.prompt);
     navigator.clipboard.writeText(post.prompt);
     setTimeout(() => setCopied(""), 3000);
@@ -42,12 +40,12 @@ const PromptCard = ({
   const timestamp = useTimeAgo(post.createdAt);
 
   const handleLike = (e: any) => {
-    e.preventDefault();
-    if (session) {
-      setHasInteracted(true);
-      setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
-      setIsLiked((prev) => !prev);
-    }
+    e.stopPropagation();
+    console.log("clicked");
+
+    setHasInteracted(true);
+    setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
+    setIsLiked((prev) => !prev);
   };
 
   useEffect(() => {
@@ -57,7 +55,7 @@ const PromptCard = ({
   useEffect(() => {
     if (hasInteracted) {
       const updateLikes = async () => {
-        if (!session.user.id) {
+        if (!session?.user.id) {
           console.warn(
             "User is not logged in or session data is not available"
           );
@@ -114,7 +112,10 @@ const PromptCard = ({
       <div className="flex justify-between items-start gap-5">
         <div className="flex-1 flex flex-col item items-start justify-between gap-3">
           {post.imageUrls && post.imageUrls.length > 0 && (
-            <div className="disable_parent_hover relative z-10 transition hover:scale-105 will-change-transform" onClick={(e) => handleImageClick(e, post.imageUrls[0])}>
+            <div
+              className="disable_parent_hover relative z-10 transition hover:scale-105 will-change-transform"
+              onClick={(e) => handleImageClick(e, post.imageUrls[0])}
+            >
               <img
                 src={post.imageUrls[0]}
                 alt="post cover image"
@@ -159,19 +160,19 @@ const PromptCard = ({
 
           <p className=" font-satoshi text-sm text-gray-700">{post.prompt}</p>
           <p
-            className="font-inter text-sm blue_gradient cursor-pointer"
-            onClick={() => handleTagClick && handleTagClick(post.tag)}
+            className="disable_parent_hover font-inter text-sm blue_gradient cursor-pointer"
+            onClick={(e) => handleTagClick && handleTagClick(e, post.tag)}
           >
             {post.tag}
           </p>
           <div className="flex flex-col gap-3 w-full">
             <div className="flex justify-between items-center gap-3 w-full mt-3">
               <div
-                className="flex items-center disable_parent_hover gap-2 select-none cursor-pointer"
-                onClick={handleLike}
+                className={`${session?.user ? "disable_parent_hover" : "pointer-events-none"} flex items-center gap-2 select-none cursor-pointer`}
+                onClick={session?.user && handleLike}
               >
                 <HeartIcon
-                  className=" hover:bg-slate-300 transition "
+                  className={`${session?.user ? "hover:bg-slate-300" : ""}  transition`}
                   isActive={isLiked}
                 />
                 <span className="font-inter text-sm text-gray-700">

@@ -45,7 +45,8 @@ const Feed = ({ posts, handleEdit, handleDelete }: any) => {
     setFilteredPosts(posts);
   }, [posts]);
 
-  const handleTagClick = (text: any) => {
+  const handleTagClick = (e:any, text: any) => {
+    e.stopPropagation();
     setSearchText(text);
   };
 
@@ -58,7 +59,11 @@ const Feed = ({ posts, handleEdit, handleDelete }: any) => {
       >
         <div className="fixed bg-slate-200/60 inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel className="max-w-[800px] w-full animate-fadeInFast">
-            <img src={selectedImage} alt="active post image" className="aspect-video object-cover w-full rounded-lg" />
+            <img
+              src={selectedImage}
+              alt="active post image"
+              className="aspect-video object-cover w-full rounded-lg"
+            />
           </DialogPanel>
         </div>
       </Dialog>
