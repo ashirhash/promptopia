@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CloudIcon, CrossIcon } from "./ui/Icons";
+import { useEffect } from "react";
 
 const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,6 +40,8 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
     }));
   };
 
+ 
+
   return (
     <section className="w-full max-w-full flex flex-col justify-start">
       <h1 className="head_text text-left">
@@ -55,7 +58,7 @@ const Form = ({ type, post, setPost, submitting, handleSubmit }: any) => {
       >
         <label>
           <span className="font-satoshi font-semibold text-base text-gray-700">
-            Post Title {" "}
+            Post Title{" "}
             <span className="text-sm after:text-gray-500">
               (max 80 characters)
             </span>

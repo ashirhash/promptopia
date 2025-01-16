@@ -62,7 +62,7 @@ const Search = ({
       <div className="relative w-full">
         <input
           type="text"
-          placeholder="Search for titles, #tags or @usernames"
+          placeholder="Search for prompts, #tags or @usernames"
           value={localSearchText} // CHANGED
           onChange={handleSearchChange} // CHANGED
           required

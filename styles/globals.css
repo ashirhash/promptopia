@@ -1,15 +1,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap");
-
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
+@import url('https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap');
 /* 
   Note: The styles for this gradient grid background is heavily inspired by the creator of this amazing site (https://dub.sh) – all credits go to them! 
 */
 
 html {
-  overflow-y: scroll; 
+  overflow-y: scroll;
 }
 
 .main {
@@ -49,11 +45,9 @@ html {
   z-index: 3;
   width: 100%;
   max-width: 640px;
-  background-image: radial-gradient(
-      at 27% 37%,
+  background-image: radial-gradient(at 27% 37%,
       hsla(215, 98%, 61%, 1) 0px,
-      transparent 0%
-    ),
+      transparent 0%),
     radial-gradient(at 97% 21%, hsla(125, 98%, 72%, 1) 0px, transparent 50%),
     radial-gradient(at 52% 99%, hsla(354, 98%, 61%, 1) 0px, transparent 50%),
     radial-gradient(at 10% 29%, hsla(256, 96%, 67%, 1) 0px, transparent 50%),
@@ -114,11 +108,13 @@ html {
 }
 
 .copy_btn {
-  @apply w-7 h-7 rounded-full hover:bg-slate-300 transition bg-white/10 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur flex justify-center items-center cursor-pointer;
+  @apply w-7 h-7 rounded-full hover:bg-slate-300 transition bg-white/10  backdrop-blur flex justify-center items-center cursor-pointer;
+  box-shadow: inset 10px -50px 94px 0 rgba(199, 199, 199, 0.2);
 }
 
 .glassmorphism {
-  @apply rounded-xl border border-gray-200 bg-white/20 shadow-[inset_10px_-50px_94px_0_rgb(199,199,199,0.2)] backdrop-blur p-5;
+  @apply rounded-xl border border-gray-200 bg-white/20 backdrop-blur p-5;
+  box-shadow: inset 10px -50px 94px 0 rgba(199, 199, 199, 0.2);
 }
 
 .prompt_layout {
@@ -176,3 +172,9 @@ html {
 .flex-between {
   @apply flex justify-between items-center;
 }
+
+/* tailwind is kept at the end to retain its specificity */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

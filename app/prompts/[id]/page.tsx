@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useTimeAgo } from "@utils/hooks";
+import { useSession } from "next-auth/react";
 
 interface PromptProfileProps {
   params: {
@@ -17,6 +18,7 @@ const Page = ({ params }: PromptProfileProps) => {
   const [post, setPost] = useState<any>({});
   const [timestamps, setTimestamps] = useState<string>("");
   const { id } = params;
+  const { data: session }: any = useSession();
 
   useEffect(() => {
     if (post.createdAt) {
@@ -47,6 +49,13 @@ const Page = ({ params }: PromptProfileProps) => {
   }, [id]);
 
   if (loading) return <div className="desc">Loading...</div>;
+
+  if (!session)
+    return (
+      <>
+        <div className="desc mb-3">Please sign in to continue</div>
+      </>
+    );
 
   if (!hasPost)
     return (
@@ -102,7 +111,7 @@ const Page = ({ params }: PromptProfileProps) => {
           </p>
         </div>
       </div>
-      <div className="">
+      <div className="pb-4">
         <p className="font-satoshi font-medium mt-5 text-slate-700 tracking-wide text-lg mb-2">
           {post.prompt} Lorem ipsum dolor sit amet consectetur adipisicing elit.
           Pariatur corrupti aliquid iste, reprehenderit non provident,
@@ -116,6 +125,31 @@ const Page = ({ params }: PromptProfileProps) => {
           - {timestamps}
         </p>
       </div>
+      <div className="flex flex-col mt-10 pt-5 border-t-2">
+        <form className="flex items-start gap-5 pb-5">
+          <textarea
+            className="form_textarea shadow-lg border border-solid"
+            placeholder="Write your comment..."
+          />
+          <button
+            type="submit"
+            className="px-5 mt-3 py-1.5 md:text-base text-sm bg-primary-orange rounded-full text-white"
+          >
+            POST
+          </button>
+        </form>
+      </div>
+      {post.comments && post.comments > 0 ? (
+        post.comments.map((comment: string) => {
+          <>
+            <span>hey</span>
+          </>;
+        })
+      ) : (
+        <div>
+          <span className="desc text-center max-w-full block w-full">No comments yet...</span>
+        </div>
+      )}
     </div>
   );
 };

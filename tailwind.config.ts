@@ -11,6 +11,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         satoshi: ["Satoshi", "sans-serif"],
+        fig: ["Figtree", "serif"],
         inter: ["Inter", "sans-serif"],
       },
       colors: {

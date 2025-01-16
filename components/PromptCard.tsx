@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { HeartIcon } from "./ui/Icons";
+import { CommentIcon, HeartIcon } from "./ui/Icons";
 import { useDebounce, useTimeAgo } from "@utils/hooks";
 import { PopupContext } from "./Feed";
 
@@ -41,8 +41,6 @@ const PromptCard = ({
 
   const handleLike = (e: any) => {
     e.stopPropagation();
-    console.log("clicked");
-
     setHasInteracted(true);
     setLikes((prev) => (isLiked ? prev - 1 : prev + 1));
     setIsLiked((prev) => !prev);
@@ -111,6 +109,9 @@ const PromptCard = ({
     >
       <div className="flex justify-between items-start gap-5">
         <div className="flex-1 flex flex-col item items-start justify-between gap-3">
+          {post.title && (
+            <h2 className="font-semibold font-fig text-xl">{post.title}</h2>
+          )}
           {post.imageUrls && post.imageUrls.length > 0 && (
             <div
               className="disable_parent_hover relative z-10 transition hover:scale-105 will-change-transform"
@@ -160,47 +161,70 @@ const PromptCard = ({
 
           <p className=" font-satoshi text-sm text-gray-700">{post.prompt}</p>
           <p
-            className="disable_parent_hover font-inter text-sm blue_gradient cursor-pointer"
+            className="disable_parent_hover font-inter text-sm block pb-3 blue_gradient cursor-pointer"
             onClick={(e) => handleTagClick && handleTagClick(e, post.tag)}
           >
             {post.tag}
           </p>
           <div className="flex flex-col gap-3 w-full">
-            <div className="flex justify-between items-center gap-3 w-full mt-3">
+            <div className="flex justify-start items-center gap-4 w-full">
               <div
-                className={`${session?.user ? "disable_parent_hover" : "pointer-events-none"} flex items-center gap-2 select-none cursor-pointer`}
+                className={`${
+                  session?.user ? "disable_parent_hover" : "pointer-events-none"
+                } flex items-center gap-2 select-none cursor-pointer`}
                 onClick={session?.user && handleLike}
               >
                 <HeartIcon
-                  className={`${session?.user ? "hover:bg-slate-300" : ""}  transition`}
+                  className={`${
+                    session?.user ? "hover:bg-slate-300" : ""
+                  }  transition p-[6.5px] bg-accent-gray rounded-full cursor-pointer`}
                   isActive={isLiked}
                 />
                 <span className="font-inter text-sm text-gray-700">
                   {likes}
                 </span>
               </div>
-              <div className="flex gap-4">
-                {handleEdit && (
-                  <button
-                    type="button"
-                    role="button"
-                    className={`disable_parent_hover hover:underline font-inter text-sm green_gradient cursor-pointer`}
-                    onClick={() => handleEdit(post)}
-                  >
-                    Edit
-                  </button>
-                )}
-                {handleDelete && (
-                  <button
-                    type="button"
-                    role="button"
-                    className="font-inter disable_parent_hover hover:underline text-sm orange_gradient cursor-pointer"
-                    onClick={() => handleDelete(post)}
-                  >
-                    Delete
-                  </button>
-                )}
+              <div
+                className={`${
+                  session?.user ? "disable_parent_hover" : "pointer-events-none"
+                } flex items-center gap-2 select-none cursor-pointer`}
+              >
+                <CommentIcon
+                  size={30}
+                  className={`${
+                    session?.user ? "hover:bg-slate-300" : ""
+                  }  transition p-[6.5px] bg-accent-gray rounded-full cursor-pointer`}
+                />
+                <span className="font-inter text-sm text-gray-700">
+                  {likes}
+                </span>
               </div>
+              {handleEdit && handleDelete && (
+                <>
+                  <div className="flex">
+                    {handleEdit && (
+                      <button
+                        type="button"
+                        role="button"
+                        className={`p-2 disable_parent_hover hover:underline font-inter text-sm green_gradient cursor-pointer`}
+                        onClick={() => handleEdit(post)}
+                      >
+                        Edit
+                      </button>
+                    )}
+                    {handleDelete && (
+                      <button
+                        type="button"
+                        role="button"
+                        className="p-2 font-inter disable_parent_hover hover:underline text-sm orange_gradient cursor-pointer"
+                        onClick={() => handleDelete(post)}
+                      >
+                        Delete
+                      </button>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
             <span className=" font-satoshi tracking-wide font-light text-xs text-slate-500">
               {timestamp}

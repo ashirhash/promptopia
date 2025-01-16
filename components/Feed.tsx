@@ -62,7 +62,7 @@ const Feed = ({ posts, handleEdit, handleDelete }: any) => {
             <img
               src={selectedImage}
               alt="active post image"
-              className="aspect-video object-cover w-full rounded-lg"
+              className="aspect-video object-contain w-full rounded-lg"
             />
           </DialogPanel>
         </div>
