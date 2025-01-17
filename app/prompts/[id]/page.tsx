@@ -20,6 +20,11 @@ const Page = ({ params }: PromptProfileProps) => {
   const { id } = params;
   const { data: session }: any = useSession();
 
+  const handleComment = () => {
+    console.log("commenting...");
+      
+  };
+
   useEffect(() => {
     if (post.createdAt) {
       setTimestamps(useTimeAgo(post?.createdAt));
@@ -134,6 +139,7 @@ const Page = ({ params }: PromptProfileProps) => {
           <button
             type="submit"
             className="px-5 mt-3 py-1.5 md:text-base text-sm bg-primary-orange rounded-full text-white"
+            onClick={handleComment}
           >
             POST
           </button>
@@ -147,7 +153,9 @@ const Page = ({ params }: PromptProfileProps) => {
         })
       ) : (
         <div>
-          <span className="desc text-center max-w-full block w-full">No comments yet...</span>
+          <span className="desc text-center max-w-full block w-full">
+            No comments yet...
+          </span>
         </div>
       )}
     </div>
