@@ -167,68 +167,76 @@ const PromptCard = ({
             {post.tag}
           </p>
           <div className="flex flex-col gap-3 w-full">
-            <div className="flex justify-start items-center gap-4 w-full">
-              <div
-                className={`${
-                  session?.user ? "disable_parent_hover" : "pointer-events-none"
-                } flex items-center gap-2 select-none cursor-pointer`}
-                onClick={session?.user && handleLike}
-              >
-                <HeartIcon
+            <div className="flex flex-col justify-start gap-4 w-full">
+              <div className="flex gap-4 items-center">
+                <div
                   className={`${
-                    session?.user ? "hover:bg-slate-300" : ""
-                  }  transition p-[6.5px] bg-accent-gray rounded-full cursor-pointer`}
-                  isActive={isLiked}
-                />
-                <span className="font-inter text-sm text-gray-700">
-                  {likes}
-                </span>
-              </div>
-              <div
-                className={`${
-                  session?.user ? "disable_parent_hover" : "pointer-events-none"
-                } flex items-center gap-2 select-none cursor-pointer`}
-              >
-                <CommentIcon
-                  size={30}
+                    session?.user
+                      ? "disable_parent_hover"
+                      : "pointer-events-none"
+                  } flex items-center gap-2 select-none cursor-pointer`}
+                  onClick={session?.user && handleLike}
+                >
+                  <HeartIcon
+                    className={`${
+                      session?.user ? "hover:bg-slate-300" : ""
+                    }  transition p-[6.5px] bg-accent-gray rounded-full cursor-pointer`}
+                    isActive={isLiked}
+                  />
+                  <span className="font-inter text-sm text-gray-700">
+                    {likes}
+                  </span>
+                </div>
+                <div
                   className={`${
-                    session?.user ? "hover:bg-slate-300" : ""
-                  }  transition p-[6.5px] bg-accent-gray rounded-full cursor-pointer`}
-                />
-                <span className="font-inter text-sm text-gray-700">
-                  {likes}
-                </span>
+                    session?.user
+                      ? "disable_parent_hover"
+                      : "pointer-events-none"
+                  } flex items-center gap-2 select-none cursor-pointer`}
+                >
+                  <CommentIcon
+                    size={30}
+                    className={`${
+                      session?.user ? "hover:bg-slate-300" : ""
+                    }  transition p-[6.5px] bg-accent-gray rounded-full cursor-pointer`}
+                  />
+                  <span className="font-inter text-sm text-gray-700">
+                    {likes}
+                  </span>
+                </div>
               </div>
-              {handleEdit && handleDelete && (
-                <>
-                  <div className="flex">
-                    {handleEdit && (
-                      <button
-                        type="button"
-                        role="button"
-                        className={`p-2 disable_parent_hover hover:underline font-inter text-sm green_gradient cursor-pointer`}
-                        onClick={() => handleEdit(post)}
-                      >
-                        Edit
-                      </button>
-                    )}
-                    {handleDelete && (
-                      <button
-                        type="button"
-                        role="button"
-                        className="p-2 font-inter disable_parent_hover hover:underline text-sm orange_gradient cursor-pointer"
-                        onClick={() => handleDelete(post)}
-                      >
-                        Delete
-                      </button>
-                    )}
-                  </div>
-                </>
-              )}
+              <div className="flex gap-2 justify-between items-center">
+                <span className=" font-satoshi tracking-wide font-light text-xs text-slate-500">
+                  {timestamp}
+                </span>
+                {handleEdit && handleDelete && (
+                  <>
+                    <div className="flex">
+                      {handleEdit && (
+                        <button
+                          type="button"
+                          role="button"
+                          className={`bg-white p-2 rounded-lg disable_parent_hover hover:underline font-inter text-sm border-1 green_gradient hover:scale-110 transition cursor-pointer`}
+                          onClick={() => handleEdit(post)}
+                        >
+                          Edit
+                        </button>
+                      )}
+                      {handleDelete && (
+                        <button
+                          type="button"
+                          role="button"
+                          className="p-2 font-inter disable_parent_hover hover:underline text-sm orange_gradient hover:scale-110 transition cursor-pointer"
+                          onClick={() => handleDelete(post)}
+                        >
+                          Delete
+                        </button>
+                      )}
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
-            <span className=" font-satoshi tracking-wide font-light text-xs text-slate-500">
-              {timestamp}
-            </span>
           </div>
         </div>
       </div>
