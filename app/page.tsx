@@ -1,35 +1,34 @@
-"use client";
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { ConnectToDB } from "@utils/database";
+import { getServerSession } from "next-auth";
+import { authOptions } from "./api/auth/[...nextauth]/route";
 import Feed from "@components/Feed";
-import { useLoader } from "./contexts/LoaderContext";
 
-const Home = () => {
-  const { data: session }: any = useSession();
-  const { setGlobalLoading } = useLoader();
-  // load posts
-  const [posts, setPosts] = useState([]);
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setGlobalLoading(true);
-        const response = await fetch(`/api/prompt`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            userId: session?.user.id,
-          },
-        });
-        const data = await response.json();
-        setPosts(data);
-      } catch (error) {
-        console.error("Error fetching posts", error);
-      } finally {
-        setGlobalLoading(false);
-      }
-    };
-    fetchPosts();
-  }, [session]);
+
+// Server Action for fetching posts
+async function fetchPosts() {
+  await ConnectToDB();
+
+  const session: any = await getServerSession(authOptions);
+
+  console.log(session, "session");
+
+  try {
+    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/prompt`, {
+      headers: {
+        "Content-Type": "application/json",
+        userId: session?.user?.id || "",
+      },
+      cache: "no-store",
+    });
+    return await response.json();
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    return [];
+  }
+}
+
+export default async function Home() {
+  const posts = await fetchPosts();
 
   return (
     <section className="w-full flex items-center flex-col">
@@ -42,9 +41,9 @@ const Home = () => {
         Promptopia is an open-source AI tool for modern world to discover,
         create and share creative prompts
       </p>
-      <Feed posts={posts} setPosts={setPosts} />
+      <Feed
+        posts={posts}
+      />
     </section>
   );
-};
-
-export default Home;
+}

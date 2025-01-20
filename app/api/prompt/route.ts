@@ -2,13 +2,13 @@ import { ConnectToDB } from "@utils/database";
 import Prompt from "@models/prompt";
 import Likes from "@models/likes";
 
-export const dynamic = 'force-dynamic'
-
 export const GET = async (req: Request) => {
   try {
     let userId: string | null;
 
     userId = req.headers.get("userid");
+
+    console.log("userId", userId, "userId");
 
     await ConnectToDB();
 

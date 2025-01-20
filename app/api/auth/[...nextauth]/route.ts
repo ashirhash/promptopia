@@ -1,13 +1,9 @@
-import NextAuth from "next-auth";
+import NextAuth, { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { ConnectToDB } from "@utils/database";
 import User from "@models/user";
 
-interface sessionProps {
-  session: any;
-}
-
-const handler = NextAuth({
+const authOptions: AuthOptions = {
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_ID || "",
@@ -15,13 +11,11 @@ const handler = NextAuth({
     }),
   ],
   callbacks: {
-    async session({ session }: sessionProps) {
+    async session({ session }: any) {
       const sessionUser = await User.findOne({
         email: session.user.email,
       });
-
       session.user.id = sessionUser._id.toString();
-
       return session;
     },
     async signIn({ profile }: any) {
@@ -53,6 +47,9 @@ const handler = NextAuth({
       }
     },
   },
-});
+}
+
+const handler = NextAuth(authOptions);
 
 export { handler as GET, handler as POST };
+export { authOptions };

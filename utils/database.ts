@@ -1,10 +1,26 @@
 import mongoose from "mongoose";
+import User from "@models/user";
+import Prompt from "@models/prompt";
+import Likes from "@models/likes";
+import Comment from "@models/comments";
 
 let isConnected = false;
 const mongoDbUri: string | undefined = process.env.MONGODB_URI
 
+
+const registerModels = () => {
+  // Importing models ensures they are registered with Mongoose,
+  // so referncing other modals does not throw a not registering error
+  User;
+  Prompt;
+  Likes;
+  Comment;
+};
+
+
 export const ConnectToDB = async () => {
     mongoose.set('strictQuery', true)
+    registerModels();
 
     if (isConnected) {
         console.log('MongoDB is already connected');

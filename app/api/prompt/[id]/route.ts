@@ -80,7 +80,7 @@ export const DELETE = async (req: any, { params }: any) => {
       }
     );
   } catch (error) {
-    return new Response("Failed to update prompt", {
+    return new Response("Failed to delete prompt", {
       status: 500,
     });
   }
