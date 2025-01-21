@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { CommentIcon, HeartIcon } from "./ui/Icons";
 import { useDebounce, useTimeAgo } from "@utils/hooks";
 import { PopupContext } from "./Feed";
+import UserBox from "./UserBox";
 
 interface PromptCardProps {
   post: any;
@@ -110,7 +111,7 @@ const PromptCard = ({
       <div className="flex justify-between items-start gap-5">
         <div className="flex-1 flex flex-col item items-start justify-between gap-3">
           {post.title && (
-            <h2 className="font-semibold font-fig text-xl">{post.title}</h2>
+            <h2 className="font-bold font-fig text-xl">{post.title}</h2>
           )}
           {post.imageUrls && post.imageUrls.length > 0 && (
             <div
@@ -125,27 +126,12 @@ const PromptCard = ({
             </div>
           )}
           <div className="disable_parent_hover flex gap-3 items-center w-full justify-between ">
-            <div
-              onClick={handleUserClick}
-              className={`flex gap-3 relative z-10 items-center cursor-pointer p-2 hover:bg-slate-200 transition rounded-md`}
-            >
-              <Image
-                src={post.creator.image}
-                alt="user_image"
-                width={40}
-                height={40}
-                className="rounded-full object-contain"
-              />
-
-              <div className="flex flex-col">
-                <h3 className="font-satoshi font-semibold text-gray-900">
-                  {post.creator.username}
-                </h3>
-                <p className="font-inter text-sm text-gray-500">
-                  {post.creator.email}
-                </p>
-              </div>
-            </div>
+            <UserBox
+              img={post.creator.image}
+              username={post.creator.username}
+              email={post.creator.email}
+              handleUserClick={handleUserClick}
+            />
 
             <div className="copy_btn " onClick={handleCopy}>
               <Image
@@ -201,7 +187,7 @@ const PromptCard = ({
                     }  transition p-[6.5px] bg-accent-gray rounded-full cursor-pointer`}
                   />
                   <span className="font-inter text-sm text-gray-700">
-                    {likes}
+                    {post.commentCount}
                   </span>
                 </div>
               </div>

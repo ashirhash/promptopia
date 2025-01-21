@@ -5,16 +5,11 @@ import Likes from "@models/likes";
 export const GET = async (req: Request) => {
   try {
     let userId: string | null;
-
     userId = req.headers.get("userid");
-
-    console.log("userId", userId, "userId");
-
     await ConnectToDB();
 
     // Fetch all prompts
     const prompts = await Prompt.find({}).populate("creator");
-
     let likedPostIds: string[] = [];
 
     // If user is logged in, fetch their liked posts
@@ -24,13 +19,13 @@ export const GET = async (req: Request) => {
     }
 
     // Attach like information to prompts
-    const promptsWithLikes = prompts.map((post) => ({
+    const promptData = prompts.map((post) => ({
       ...post.toObject(),
       liked: likedPostIds.includes(post._id.toString()),
-      likes: post.likes || 0,
+      commentCount: post.commentCount || 0,
     }));
 
-    return new Response(JSON.stringify(promptsWithLikes), {
+    return new Response(JSON.stringify(promptData), {
       status: 200,
     });
   } catch (error) {

@@ -17,6 +17,7 @@ const config: Config = {
       colors: {
         "primary-orange": "#FF5722",
         "accent-gray": "#f0eef4",
+        "light-black": "#121212",
       },
       keyframes: {
         like_effect: {

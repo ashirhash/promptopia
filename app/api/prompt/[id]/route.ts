@@ -1,5 +1,6 @@
 import { ConnectToDB } from "@utils/database";
 import Prompt from "@models/prompt";
+import Comment from "@models/comments";
 
 export const GET = async (req: any, { params }: any) => {
   try {
@@ -9,7 +10,9 @@ export const GET = async (req: any, { params }: any) => {
 
     if (!prompt) return new Response("Prompt not found", { status: 404 });
 
-    return new Response(JSON.stringify(prompt), {
+    const comments = await Comment.find({ postId: params.id }).populate('creator').exec() || [];
+
+    return new Response(JSON.stringify({ ...prompt.toObject(), comments }), {
       status: 200,
     });
   } catch (error) {

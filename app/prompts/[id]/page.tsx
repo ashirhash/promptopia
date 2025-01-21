@@ -1,10 +1,11 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { useTimeAgo } from "@utils/hooks";
 import { useSession } from "next-auth/react";
+import UserBox from "@components/UserBox";
+import CommentCard from "@components/CommentCard";
 
 interface PromptProfileProps {
   params: {
@@ -19,16 +20,44 @@ const Page = ({ params }: PromptProfileProps) => {
   const [timestamps, setTimestamps] = useState<string>("");
   const { id } = params;
   const { data: session }: any = useSession();
+  const [isCommenting, setIsCommenting] = useState(false);
 
-  const handleComment = () => {
-    console.log("commenting...");
-      
+  const [comment, setComment] = useState({
+    userId: session?.user.id,
+    parentId: "",
+    content: "",
+  });
+
+  const handleComment = async (e: any) => {
+    e.preventDefault();
+    setIsCommenting(true);
+    if (!session?.user.id) {
+      console.warn("User is not logged in or session data is not available");
+      return;
+    }
+
+    try {
+      await fetch(`/api/prompt/${post._id}/comment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(comment),
+      });
+    } catch (error) {
+      console.error(
+        "The following error occured while liking the post: ",
+        error
+      );
+    }
+    setIsCommenting(false);
   };
 
   useEffect(() => {
     if (post.createdAt) {
       setTimestamps(useTimeAgo(post?.createdAt));
     }
+    console.log(post);
   }, [post]);
 
   useEffect(() => {
@@ -74,6 +103,9 @@ const Page = ({ params }: PromptProfileProps) => {
 
   return (
     <div className="w-full">
+      <h2 className="font-bold md:max-w-[75%] w-full font-fig text-light-black text-4xl mb-4">
+        {post.title}
+      </h2>
       <div className="flex flex-col justify-start items-start md:flex-row gap-5">
         {post?.imageUrls[0] && (
           <>
@@ -86,30 +118,14 @@ const Page = ({ params }: PromptProfileProps) => {
             </div>
           </>
         )}
-        <div className="">
-          <Link
-            href={`/authors/${post.creator._id}`}
-            className={`flex gap-3 items-center cursor-pointer hover:bg-slate-200 transition rounded-lg mb-3 p-2`}
-          >
-            <Image
-              src={post.creator.image}
-              alt="user_image"
-              width={40}
-              height={40}
-              className="rounded-full object-contain"
-            />
-
-            <div className="flex flex-col">
-              <h3 className="font-satoshi font-semibold text-gray-900">
-                {post.creator.username}
-              </h3>
-              <p className="font-inter text-sm text-gray-500">
-                {post.creator.email}
-              </p>
-            </div>
-          </Link>
+        <div className="flex flex-col gap-3">
+          <UserBox
+            img={post.creator.image}
+            username={post.creator.username}
+            email={post.creator.email}
+          />
           <p
-            className="font-inter pl-2 text-sm blue_gradient cursor-pointer"
+            className="font-inter pl-2 text-sm blue_gradient"
             // onClick={() => handleTagClick && handleTagClick(post.tag)}
           >
             {post.tag}
@@ -130,27 +146,38 @@ const Page = ({ params }: PromptProfileProps) => {
           - {timestamps}
         </p>
       </div>
-      <div className="flex flex-col mt-10 pt-5 border-t-2">
-        <form className="flex items-start gap-5 pb-5">
+      <div className="flex flex-col my-10 py-5 border-t-2">
+        <form onSubmit={handleComment} className="flex items-start gap-5">
           <textarea
             className="form_textarea shadow-lg border border-solid"
             placeholder="Write your comment..."
+            onChange={(e) =>
+              setComment({
+                ...comment,
+                content: e.target.value,
+              })
+            }
           />
           <button
             type="submit"
-            className="px-5 mt-3 py-1.5 md:text-base text-sm bg-primary-orange rounded-full text-white"
-            onClick={handleComment}
+            className={`px-5 mt-3 py-1.5 md:text-base text-sm bg-primary-orange rounded-full text-white ${
+              isCommenting ? "pointer-events-none" : "cursor-pointer"
+            }`}
           >
-            POST
+            {isCommenting ? "POSTING..." : "POST"}
           </button>
         </form>
       </div>
-      {post.comments && post.comments > 0 ? (
-        post.comments.map((comment: string) => {
-          <>
-            <span>hey</span>
-          </>;
-        })
+      {post?.comments && post?.comments.length > 0 ? (
+        <div className="flex flex-col gap-4 mb-10">
+          {post.comments.map((comment: any, index: any) => {
+            if (comment.content) {
+              return (
+                <CommentCard key={`comment-box-${index}`} comment={comment} />
+              );
+            }
+          })}
+        </div>
       ) : (
         <div>
           <span className="desc text-center max-w-full block w-full">

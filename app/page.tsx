@@ -4,13 +4,10 @@ import { authOptions } from "./api/auth/[...nextauth]/route";
 import Feed from "@components/Feed";
 
 
-// Server Action for fetching posts
 async function fetchPosts() {
   await ConnectToDB();
 
   const session: any = await getServerSession(authOptions);
-
-  console.log(session, "session");
 
   try {
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/prompt`, {

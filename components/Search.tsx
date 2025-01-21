@@ -10,7 +10,7 @@ const Search = ({
 }: any) => {
   // Local state for instant updates
   const [localSearchText, setLocalSearchText] = useState(searchText);
-  const debouncedSearchText = useDebounce(localSearchText, 500);
+  const debouncedSearchText = useDebounce(localSearchText, 300);
 
   useEffect(() => {
     setLocalSearchText(searchText);

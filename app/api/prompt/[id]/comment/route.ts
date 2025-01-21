@@ -6,8 +6,6 @@ export const POST = async (req: any, { params }: any) => {
     await ConnectToDB();
 
     const request = await req.json();
-    console.log(request);
-
     const { userId, parentId, content } = request;
     const postId = params.id;
 
@@ -32,7 +30,7 @@ export const POST = async (req: any, { params }: any) => {
 
     //create a new comment in db
     const newComment = new Comment({
-      userId,
+      creator: userId,
       postId,
       parentId: parentNotValid ? null : parentId,
       content,
@@ -65,7 +63,7 @@ export const DELETE = async (req: any, { params }: any) => {
     if (!postId) {
       throw new Error("No post id found");
     }
-    
+
     if (!postId) {
       throw new Error("No post id found");
     }
