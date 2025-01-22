@@ -1,7 +1,7 @@
 import { ConnectToDB } from "@utils/database";
 import { getServerSession } from "next-auth";
-import { authOptions } from "./api/auth/[...nextauth]/route";
 import Feed from "@components/Feed";
+import { authOptions } from "@utils/nextauth";
 
 
 async function fetchPosts() {
