@@ -1,11 +1,17 @@
 import React from "react";
 import Image from "next/image";
 
-const UserBox = ({ img, username, email, handleUserClick }: any) => {
+const UserBox = ({
+  img,
+  username,
+  email,
+  handleUserClick,
+  className = "",
+}: any) => {
   return (
     <div
       onClick={handleUserClick}
-      className={`flex gap-3 relative z-10 items-center cursor-pointer p-2 hover:bg-slate-200 transition rounded-md`}
+      className={`flex gap-3 relative z-10 items-center cursor-pointer p-2 hover:bg-slate-200 transition rounded-md ${className}`}
     >
       <Image
         src={img}

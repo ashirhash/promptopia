@@ -99,14 +99,16 @@ const CommentCard = ({
 
   return (
     <div className="p-2 border rounded-md flex flex-col gap-3">
-      <UserBox
-        className="w-fit"
-        img={comment?.creator?.image}
-        username={comment?.creator?.username}
-        email={comment?.creator?.email}
-        handleUserClick={handleUserClick}
-      />
-      <p className="font-satoshi font-medium text-light-black tracking-wide text-base mb-2">
+      <div className="w-fit">
+        <UserBox
+          className="px-3"
+          img={comment?.creator?.image}
+          username={comment?.creator?.username}
+          email={comment?.creator?.email}
+          handleUserClick={handleUserClick}
+        />
+      </div>
+      <p className="font-satoshi font-medium text-slate-700 tracking-wide text-[15px] ml-3 mb-2">
         {comment.content}
       </p>
     </div>

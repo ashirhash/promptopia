@@ -132,8 +132,8 @@ const Page = ({ params }: PromptProfileProps) => {
           </p>
         </div>
       </div>
-      <div className="pb-4">
-        <p className="font-satoshi font-medium mt-5 text-slate-700 tracking-wide text-lg mb-2">
+      <div className="mt-5 pb-4">
+        <p className="font-satoshi font-medium text-slate-700 tracking-wide text-lg mb-2">
           {post.prompt} Lorem ipsum dolor sit amet consectetur adipisicing elit.
           Pariatur corrupti aliquid iste, reprehenderit non provident,
           perferendis quibusdam expedita error nemo, praesentium obcaecati hic.
