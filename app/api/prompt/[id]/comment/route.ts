@@ -1,5 +1,6 @@
 import { ConnectToDB } from "@utils/database";
 import Comment from "@models/comments";
+import Prompt from "@models/prompt";
 
 export const POST = async (req: any, { params }: any) => {
   try {
@@ -37,6 +38,11 @@ export const POST = async (req: any, { params }: any) => {
     });
 
     await newComment.save();
+
+    const totalComments = await Comment.countDocuments({ postId });
+
+    await Prompt.findByIdAndUpdate(postId, { commentCount: totalComments });
+
     return new Response("Commented successfully", {
       status: 200,
     });

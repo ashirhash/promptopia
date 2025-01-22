@@ -21,8 +21,7 @@ export const GET = async (req: Request) => {
     // Attach like information to prompts
     const promptData = prompts.map((post) => ({
       ...post.toObject(),
-      liked: likedPostIds.includes(post._id.toString()),
-      commentCount: post.commentCount || 0,
+      liked: likedPostIds.includes(post._id.toString())
     }));
 
     return new Response(JSON.stringify(promptData), {

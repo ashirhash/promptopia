@@ -40,8 +40,6 @@ const CommentCard = ({
   //   const debLikes = useDebounce(likes, 1000);
   const timestamp = useTimeAgo(comment.createdAt);
 
-  console.log(comment);
-
   //   const handleLike = (e: any) => {
   //     e.stopPropagation();
   //     setHasInteracted(true);
@@ -98,7 +96,7 @@ const CommentCard = ({
   };
 
   return (
-    <div className="p-2 border rounded-md flex flex-col gap-3">
+    <div className="p-2 pb-4 border rounded-md flex flex-col gap-3">
       <div className="w-fit">
         <UserBox
           className="px-3"
@@ -108,9 +106,42 @@ const CommentCard = ({
           handleUserClick={handleUserClick}
         />
       </div>
-      <p className="font-satoshi font-medium text-slate-700 tracking-wide text-[15px] ml-3 mb-2">
-        {comment.content}
-      </p>
+      <div className="ml-3 flex flex-col gap-3">
+        <p className="font-satoshi font-medium text-slate-700 tracking-wide text-[15px] ">
+          {comment.content}
+        </p>
+        <div className="flex gap-2 justify-between items-center">
+          <span className=" font-satoshi tracking-wide font-light text-xs text-slate-500">
+            {timestamp}
+          </span>
+          {handleEdit && handleDelete && (
+            <>
+              <div className="flex">
+                {handleEdit && (
+                  <button
+                    type="button"
+                    role="button"
+                    className={`bg-white p-2 rounded-lg disable_parent_hover hover:underline font-inter text-sm border-1 green_gradient hover:scale-110 transition cursor-pointer`}
+                    onClick={() => handleEdit(comment)}
+                  >
+                    Edit
+                  </button>
+                )}
+                {handleDelete && (
+                  <button
+                    type="button"
+                    role="button"
+                    className="p-2 font-inter disable_parent_hover hover:underline text-sm orange_gradient hover:scale-110 transition cursor-pointer"
+                    onClick={() => handleDelete(comment)}
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

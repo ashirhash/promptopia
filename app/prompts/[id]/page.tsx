@@ -57,7 +57,6 @@ const Page = ({ params }: PromptProfileProps) => {
     if (post.createdAt) {
       setTimestamps(useTimeAgo(post?.createdAt));
     }
-    console.log(post);
   }, [post]);
 
   useEffect(() => {

@@ -1,14 +1,11 @@
-import { ConnectToDB } from "@utils/database";
 import { getServerSession } from "next-auth";
 import Feed from "@components/Feed";
 import { authOptions } from "@utils/nextauth";
-
+import Prompt from "@models/prompt";
+import { ConnectToDB } from "@utils/database";
 
 async function fetchPosts() {
-  await ConnectToDB();
-
   const session: any = await getServerSession(authOptions);
-
   try {
     const response = await fetch(`${process.env.NEXTAUTH_URL}/api/prompt`, {
       headers: {

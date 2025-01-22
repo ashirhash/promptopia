@@ -23,6 +23,11 @@ const PromptSchema = new Schema({
     default: 0,
     required: [true, "Likes are required."],
   },
+  commentCount: {
+    type: Number,
+    default: 0,
+    required: [true, "Comments are required."],
+  },
   imageUrls: { type: [String], default: [] },
 });
 
