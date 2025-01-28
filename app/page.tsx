@@ -11,8 +11,7 @@ async function fetchPosts() {
       headers: {
         "Content-Type": "application/json",
         userId: session?.user?.id || "",
-      },
-      cache: "no-store",
+      }
     });
     return await response.json();
   } catch (error) {
