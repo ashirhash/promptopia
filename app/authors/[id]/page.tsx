@@ -21,7 +21,6 @@ const fetchPosts = async (id: string) => {
 export default async function AuthorProfile({ params }: AuthorProps) {
   const { id } = params;
   const posts = await fetchPosts(id);
-  console.log(posts);
 
   return (
     <Profile
