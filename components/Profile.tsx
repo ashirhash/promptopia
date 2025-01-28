@@ -1,6 +1,6 @@
 "use client";
 import { useEdgeStore } from "@utils/edgestore";
-import { useLoader } from "@app/contexts/LoaderContext";
+import { useLoader } from "@contexts/LoaderContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Feed from "./Feed";
