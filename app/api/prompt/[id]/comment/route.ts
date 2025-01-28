@@ -81,6 +81,10 @@ export const DELETE = async (req: any, { params }: any) => {
     // delete comment
     const comment = await Comment.findByIdAndDelete(commentId);
 
+    const totalComments = await Comment.countDocuments({ postId });
+
+    await Prompt.findByIdAndUpdate(postId, { commentCount: totalComments });
+
     return new Response("Comment deleted successfully", {
       status: 200,
     });

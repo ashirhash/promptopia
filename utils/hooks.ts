@@ -18,5 +18,11 @@ export const useDebounce = <T>(value: T, delay = 500) => {
 };
 
 export const useTimeAgo = (createdAt: string) => {
-  return formatDistanceToNow(new Date(createdAt), { addSuffix: true });
+  const date = new Date(createdAt);
+
+  if (isNaN(date.getTime())) {
+    return createdAt; 
+  }
+
+  return formatDistanceToNow(date, { addSuffix: true });
 };

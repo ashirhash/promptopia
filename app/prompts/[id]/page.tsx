@@ -14,6 +14,13 @@ interface PromptProfileProps {
   };
 }
 
+interface Comment {
+  userId: string | null; // Adjust the type based on your actual session object
+  parentId: string;
+  content: string;
+  createdAt: string
+}
+
 const Page = ({ params }: PromptProfileProps) => {
   const { data: session }: any = useSession();
   const { id } = params;
@@ -22,13 +29,18 @@ const Page = ({ params }: PromptProfileProps) => {
   const [post, setPost] = useState<any>({});
   const [timestamps, setTimestamps] = useState<string>("");
   const [isCommenting, setIsCommenting] = useState(false);
-  const [comments, setComments] = useState([]);
-  const [comment, setComment] = useState({
+  const [comments, setComments] = useState<Comment[]>([]);
+  // the remaining data like createdAt is locally being temporarily created, mostly as a fake data to show the changed instantly to the user instaed of making an api call 
+  const [comment, setComment] = useState<Comment>({
     userId: session?.user.id,
     parentId: "",
     content: "",
+    createdAt: "just now"
   });
   const { setGlobalLoading } = useLoader();
+
+  console.log(comments);
+  
 
   const handleComment = async (e: any) => {
     e.preventDefault();
@@ -39,20 +51,25 @@ const Page = ({ params }: PromptProfileProps) => {
     }
 
     try {
-      await fetch(`/api/prompt/${post._id}/comment`, {
+      const res = await fetch(`/api/prompt/${post._id}/comment`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(comment),
       });
+      if(res.ok) {
+        setComments([...comments, comment])
+      }
     } catch (error) {
       console.error(
         "The following error occured while liking the post: ",
         error
       );
     }
-    setIsCommenting(false);
+    finally {
+      setIsCommenting(false);
+    }
   };
 
   const handleDelete = async (commentId: number | string) => {
@@ -201,7 +218,7 @@ const Page = ({ params }: PromptProfileProps) => {
       </div>
       {comments.length > 0 ? (
         <div className="flex flex-col gap-4 mb-10">
-          {comments.map((comment: any, index: any) => {
+          {[...comments].reverse().map((comment: any, index: any) => {
             if (comment.content) {
               return (
                 <CommentCard

@@ -14,7 +14,7 @@ const CommentCard = ({ comment, handleDelete }: CommentCardProps) => {
   const { data: session }: any = useSession();
   const router = useRouter();
   const timestamp = useTimeAgo(comment.createdAt);
-  const isSameUser = session?.user.id === comment.creator._id;
+  const isSameUser = session?.user.id === comment.creator?._id;
 
   const handleUserClick = (e: any) => {
     e.stopPropagation();
@@ -32,7 +32,7 @@ const CommentCard = ({ comment, handleDelete }: CommentCardProps) => {
       <div className="w-fit">
         <UserBox
           className="px-3"
-          img={comment?.creator?.image}
+          img={comment?.creator?.image || session?.user?.image}
           username={comment?.creator?.username}
           email={comment?.creator?.email}
           handleUserClick={handleUserClick}
