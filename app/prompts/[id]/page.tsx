@@ -6,6 +6,7 @@ import { useTimeAgo } from "@utils/hooks";
 import { useSession } from "next-auth/react";
 import UserBox from "@components/UserBox";
 import CommentCard from "@components/CommentCard";
+import { useLoader } from "@app/contexts/LoaderContext";
 
 interface PromptProfileProps {
   params: {
@@ -14,25 +15,26 @@ interface PromptProfileProps {
 }
 
 const Page = ({ params }: PromptProfileProps) => {
+  const { data: session }: any = useSession();
+  const { id } = params;
   const [loading, setLoading] = useState(true);
   const [hasPost, setHasPost] = useState(true);
   const [post, setPost] = useState<any>({});
   const [timestamps, setTimestamps] = useState<string>("");
-  const { id } = params;
-  const { data: session }: any = useSession();
   const [isCommenting, setIsCommenting] = useState(false);
-
+  const [comments, setComments] = useState([]);
   const [comment, setComment] = useState({
     userId: session?.user.id,
     parentId: "",
     content: "",
   });
+  const { setGlobalLoading } = useLoader();
 
   const handleComment = async (e: any) => {
     e.preventDefault();
     setIsCommenting(true);
     if (!session?.user.id) {
-      console.warn("User is not logged in or session data is not available");
+      console.error("User is not logged in or session data is not available");
       return;
     }
 
@@ -53,6 +55,33 @@ const Page = ({ params }: PromptProfileProps) => {
     setIsCommenting(false);
   };
 
+  const handleDelete = async (commentId: number | string) => {
+    setGlobalLoading(true);
+    const hasConfirmed = confirm(
+      "Are you sure you want to delete this prompt?"
+    );
+
+    if (hasConfirmed) {
+      try {
+        await fetch(`/api/prompt/${id}/comment`, {
+          method: "DELETE",
+          body: JSON.stringify({
+            userId: comment.userId,
+            commentId: commentId,
+          }),
+        });
+        const filteredComments = comments.filter((item: any) => {
+          return item._id !== commentId;
+        });
+        setComments(filteredComments);
+      } catch (error) {
+        console.error("error deleting post", error);
+      } finally {
+        setGlobalLoading(false);
+      }
+    }
+  };
+
   useEffect(() => {
     if (post.createdAt) {
       setTimestamps(useTimeAgo(post?.createdAt));
@@ -68,6 +97,9 @@ const Page = ({ params }: PromptProfileProps) => {
         if (!response.ok) throw new Error("Network response was not ok");
         const post = await response.json();
         setPost(post);
+        if (post.comments && post.comments.length > 0) {
+          setComments(post.comments);
+        }
       } catch (error) {
         console.error("Failed to fetch user data:", error);
         setHasPost(false);
@@ -81,14 +113,14 @@ const Page = ({ params }: PromptProfileProps) => {
     }
   }, [id]);
 
-  if (loading) return <div className="desc">Loading...</div>;
+  useEffect(() => {
+    setComment({
+      ...comment,
+      userId: session?.user.id,
+    });
+  }, [session]);
 
-  if (!session)
-    return (
-      <>
-        <div className="desc mb-3">Please sign in to continue</div>
-      </>
-    );
+  if (loading) return <div className="desc">Loading...</div>;
 
   if (!hasPost)
     return (
@@ -167,12 +199,16 @@ const Page = ({ params }: PromptProfileProps) => {
           </button>
         </form>
       </div>
-      {post?.comments && post?.comments.length > 0 ? (
+      {comments.length > 0 ? (
         <div className="flex flex-col gap-4 mb-10">
-          {post.comments.map((comment: any, index: any) => {
+          {comments.map((comment: any, index: any) => {
             if (comment.content) {
               return (
-                <CommentCard key={`comment-box-${index}`} comment={comment} />
+                <CommentCard
+                  key={`comment-box-${index}`}
+                  comment={comment}
+                  handleDelete={handleDelete}
+                />
               );
             }
           })}

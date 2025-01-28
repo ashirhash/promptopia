@@ -61,6 +61,10 @@ export const DELETE = async (req: any, { params }: any) => {
     const { userId, commentId } = await req.json();
     const postId = params.id;
 
+    
+    console.log("--------------");
+    console.log({ postId, userId, commentId });
+
     // handle resource validations
     if (!userId) {
       throw new Error("No user id found");
@@ -75,9 +79,7 @@ export const DELETE = async (req: any, { params }: any) => {
     }
 
     // delete comment
-    const comment = await Comment.findById(commentId);
-
-    console.log(comment);
+    const comment = await Comment.findByIdAndDelete(commentId);
 
     return new Response("Comment deleted successfully", {
       status: 200,
