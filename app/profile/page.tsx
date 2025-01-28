@@ -5,15 +5,6 @@ import { ConnectToDB } from "@utils/database";
 
 export default async function Page() {
   const session: any = await getServerSession(authOptions);
-  
-  async function fetchPosts() {
-    await ConnectToDB();
-    const response = await fetch(`${process.env.NEXTAUTH_URL}/api/users/${session?.user.id}/posts`);
-    return await response.json();
-  }
-
-  const posts = await fetchPosts();
-
   if (!session) {
     return (
       <div>
@@ -21,6 +12,16 @@ export default async function Page() {
       </div>
     );
   }
+
+  async function fetchPosts() {
+    await ConnectToDB();
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/users/${session?.user.id}/posts`
+    );
+    return await response.json();
+  }
+
+  const posts = await fetchPosts();
 
   return (
     <>
