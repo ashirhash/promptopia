@@ -1,6 +1,6 @@
 import { ConnectToDB } from "@utils/database";
 import Prompt from "@models/prompt";
-import Likes from "@models/likes";
+import Likes from "@models/like";
 
 export const GET = async (req: any, { params }: any) => {
   try {

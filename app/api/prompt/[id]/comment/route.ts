@@ -1,13 +1,12 @@
 import { ConnectToDB } from "@utils/database";
-import Comment from "@models/comments";
+import Comment from "@models/comment";
 import Prompt from "@models/prompt";
 
 export const POST = async (req: any, { params }: any) => {
   try {
     await ConnectToDB();
 
-    const request = await req.json();
-    const { userId, parentId, content } = request;
+    const { userId, parentId, content } = await req.json();
     const postId = params.id;
 
     if (
