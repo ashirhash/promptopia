@@ -72,7 +72,11 @@ html {
 /* Tailwind Styles */
 
 .app {
-  @apply relative z-10 flex justify-center items-center flex-col max-w-7xl mx-auto sm:px-16 px-6;
+  @apply relative z-10 flex justify-center items-center flex-col mx-auto;
+}
+
+.app .container {
+  @apply max-w-7xl px-5;
 }
 
 .black_btn {
@@ -108,7 +112,7 @@ html {
 }
 
 .copy_btn {
-  @apply w-7 h-7 rounded-full hover:bg-slate-300 transition bg-white/10  backdrop-blur flex justify-center items-center cursor-pointer;
+  @apply w-7 h-7 rounded-lg hover:bg-slate-300 transition bg-white/10  backdrop-blur flex justify-center items-center cursor-pointer;
   box-shadow: inset 10px -50px 94px 0 rgba(199, 199, 199, 0.2);
 }
 
@@ -123,7 +127,7 @@ html {
 
 /* Feed Component */
 .feed {
-  @apply mt-16 mx-auto w-full max-w-xl flex justify-center items-center flex-col gap-2;
+  @apply mt-10 mx-auto w-full flex justify-center items-center flex-col gap-2;
 }
 
 /* Form Component */
@@ -141,7 +145,7 @@ html {
 }
 
 .dropdown {
-  @apply absolute right-0 top-full mt-3 w-full p-5 rounded-lg bg-white min-w-[210px] flex flex-col gap-2 justify-end items-end;
+  @apply absolute right-0 top-full mt-3 w-full p-5 rounded-lg bg-white min-w-[210px] flex flex-col gap-2 justify-end items-end z-10;
 }
 
 .dropdown_link {

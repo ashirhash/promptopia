@@ -3,7 +3,7 @@ import { useState, useEffect, useContext } from "react";
 import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { CommentIcon, HeartIcon } from "./ui/Icons";
+import { CommentIcon, HeartIcon, ShareIcon } from "./ui/Icons";
 import { useDebounce, useTimeAgo } from "@utils/hooks";
 import { PopupContext } from "./Feed";
 import UserBox from "./UserBox";
@@ -29,13 +29,6 @@ const PromptCard = ({
   const [hasInteracted, setHasInteracted] = useState(false);
   const { data: session }: any = useSession();
   const router = useRouter();
-
-  const handleCopy = (e: any) => {
-    e.stopPropagation();
-    setCopied(post.prompt);
-    navigator.clipboard.writeText(post.prompt);
-    setTimeout(() => setCopied(""), 3000);
-  };
 
   const debLikes = useDebounce(likes, 1000);
   const timestamp = useTimeAgo(post.createdAt);
@@ -103,6 +96,8 @@ const PromptCard = ({
     );
   };
 
+  const handleShare = () => {};
+
   return (
     <div
       onClick={handleCardClick}
@@ -113,6 +108,25 @@ const PromptCard = ({
           {post.title && (
             <h2 className="font-bold font-fig text-xl">{post.title}</h2>
           )}
+
+          <div className="disable_parent_hover flex gap-3 items-center w-full justify-between ">
+            <UserBox
+              img={post.creator.image}
+              username={post.creator.username}
+              email={post.creator.email}
+              handleUserClick={handleUserClick}
+            />
+          </div>
+          <p className=" font-satoshi text-sm text-gray-700">{post.prompt}</p>
+          <p
+            className="disable_parent_hover font-inter text-sm block blue_gradient cursor-pointer"
+            onClick={(e) => handleTagClick && handleTagClick(e, post.tag)}
+          >
+            {post.tag}
+          </p>
+          <span className=" font-satoshi tracking-wide font-light text-xs text-slate-500">
+            {timestamp}
+          </span>
           {post.imageUrls && post.imageUrls.length > 0 && (
             <div
               className="disable_parent_hover relative z-10 transition hover:scale-105 will-change-transform"
@@ -125,36 +139,9 @@ const PromptCard = ({
               />
             </div>
           )}
-          <div className="disable_parent_hover flex gap-3 items-center w-full justify-between ">
-            <UserBox
-              img={post.creator.image}
-              username={post.creator.username}
-              email={post.creator.email}
-              handleUserClick={handleUserClick}
-            />
-
-            <div className="copy_btn " onClick={handleCopy}>
-              <Image
-                alt="copy button"
-                src={
-                  copied ? "/assets/icons/tick.svg" : "/assets/icons/copy.svg"
-                }
-                width={15}
-                height={15}
-              />
-            </div>
-          </div>
-
-          <p className=" font-satoshi text-sm text-gray-700">{post.prompt}</p>
-          <p
-            className="disable_parent_hover font-inter text-sm block pb-3 blue_gradient cursor-pointer"
-            onClick={(e) => handleTagClick && handleTagClick(e, post.tag)}
-          >
-            {post.tag}
-          </p>
-          <div className="flex flex-col gap-3 w-full">
-            <div className="flex flex-col justify-start gap-4 w-full">
-              <div className="flex gap-4 items-center">
+          <div className="flex flex-col justify-start gap-4 w-full">
+            <div className="flex gap-4 items-center justify-between">
+              <div className="flex items-center gap-4">
                 <div
                   className={`${
                     session?.user
@@ -166,7 +153,7 @@ const PromptCard = ({
                   <HeartIcon
                     className={`${
                       session?.user ? "hover:bg-slate-300" : ""
-                    }  transition p-[6.5px] bg-accent-gray rounded-full cursor-pointer`}
+                    }  transition p-[6.5px] bg-accent-gray rounded-lg cursor-pointer`}
                     isActive={isLiked}
                   />
                   <span className="font-inter text-sm text-gray-700">
@@ -174,55 +161,63 @@ const PromptCard = ({
                   </span>
                 </div>
                 <div
-                  className={`${
-                    session?.user
-                      ? "disable_parent_hover"
-                      : "pointer-events-none"
-                  } flex items-center gap-2 select-none cursor-pointer`}
+                  className={`flex disable_parent_hover items-center gap-2 select-none cursor-pointer`}
                 >
                   <CommentIcon
                     size={30}
-                    className={`${
-                      session?.user ? "hover:bg-slate-300" : ""
-                    }  transition p-[6.5px] bg-accent-gray rounded-full cursor-pointer`}
+                    className={`hover:bg-slate-300 transition p-[6.5px] bg-accent-gray rounded-lg cursor-pointer`}
                   />
                   <span className="font-inter text-sm text-gray-700">
                     {post.commentCount}
                   </span>
                 </div>
               </div>
-              <div className="flex gap-2 justify-between items-center">
-                <span className=" font-satoshi tracking-wide font-light text-xs text-slate-500">
-                  {timestamp}
-                </span>
-                {handleEdit && handleDelete && (
-                  <>
-                    <div className="flex">
-                      {handleEdit && (
-                        <button
-                          type="button"
-                          role="button"
-                          className={`bg-white p-2 rounded-lg disable_parent_hover hover:underline font-inter text-sm border-1 green_gradient hover:scale-110 transition cursor-pointer`}
-                          onClick={() => handleEdit(post)}
-                        >
-                          Edit
-                        </button>
-                      )}
-                      {handleDelete && (
-                        <button
-                          type="button"
-                          role="button"
-                          className="p-2 font-inter disable_parent_hover hover:underline text-sm orange_gradient hover:scale-110 transition cursor-pointer"
-                          onClick={() => handleDelete(post)}
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </div>
-                  </>
-                )}
+              <div className="flex items-center gap-4">
+                <div
+                  className={`${
+                    session?.user
+                      ? "disable_parent_hover"
+                      : "pointer-events-none"
+                  } flex items-center gap-2 select-none cursor-pointer`}
+                >
+                  <ShareIcon
+                    size={30}
+                    className={`${
+                      session?.user ? "hover:bg-slate-300" : ""
+                    }  transition p-[5.5px] bg-accent-gray rounded-lg cursor-pointer`}
+                  />
+                  <span className="font-inter text-sm text-gray-700">
+                    {post.commentCount}
+                  </span>
+                </div>
               </div>
             </div>
+            {handleEdit && handleDelete && (
+              <>
+                <div className="flex">
+                  {handleEdit && (
+                    <button
+                      type="button"
+                      role="button"
+                      className={`bg-white p-2 rounded-lg disable_parent_hover hover:underline font-inter text-sm border-1 green_gradient hover:scale-110 transition cursor-pointer`}
+                      onClick={() => handleEdit(post)}
+                    >
+                      Edit
+                    </button>
+                  )}
+                  {handleDelete && (
+                    <button
+                      type="button"
+                      role="button"
+                      className="p-2 font-inter disable_parent_hover hover:underline text-sm orange_gradient hover:scale-110 transition cursor-pointer"
+                      onClick={() => handleDelete(post)}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

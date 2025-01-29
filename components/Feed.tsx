@@ -12,7 +12,7 @@ export const PromptCardList = ({
   handleDelete,
 }: any) => {
   return (
-    <div className="mt-16 prompt_layout">
+    <div className="mt-10 prompt_layout">
       {posts.length > 0 ? (
         posts.map((post: any) => (
           <PromptCard

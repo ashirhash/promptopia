@@ -57,26 +57,24 @@ const Search = ({
   return (
     <form
       onSubmit={(e) => e.preventDefault()}
-      className="relative w-full"
+      className="relative w-full max-w-xl"
     >
-      <div className="relative w-full">
-        <input
-          type="text"
-          placeholder="Search for prompts, #tags or @usernames"
-          value={localSearchText} // CHANGED
-          onChange={handleSearchChange} // CHANGED
-          required
-          className="search_input peer"
-        />
-        <CrossIcon
-          width="19px"
-          height="19px"
-          className={`${
-            localSearchText ? "block" : "hidden"
-          } cursor-pointer absolute z-10 right-2 top-[12px]`} // CHANGED
-          onClick={handleSearchDelete} // CHANGED
-        />
-      </div>
+      <input
+        type="text"
+        placeholder="Search for prompts, #tags or @usernames"
+        value={localSearchText} // CHANGED
+        onChange={handleSearchChange} // CHANGED
+        required
+        className="search_input peer py-3"
+      />
+      <CrossIcon
+        width="19px"
+        height="19px"
+        className={`${
+          localSearchText ? "block" : "hidden"
+        } cursor-pointer absolute z-10 right-2 top-[12px]`} // CHANGED
+        onClick={handleSearchDelete} // CHANGED
+      />
     </form>
   );
 };

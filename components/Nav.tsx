@@ -21,7 +21,7 @@ const Nav = () => {
   }, []);
 
   return (
-    <nav className="flex justify-between items-center w-full mb-16 pt-3">
+    <nav className="flex justify-between items-center w-full p-3">
       <Link href="/" className="flex gap-2 items-center">
         <Image
           priority={true}
@@ -34,60 +34,19 @@ const Nav = () => {
         <p className="logo_text">Promptopia</p>
       </Link>
 
-      {/* Desktop navigation */}
-      <div className="sm:flex hidden">
+      <div className="flex relative">
         {session?.user ? (
-          <div className="flex items-center gap-3 md:gap-5">
-            <Link href="/create-prompt" className="black_btn">
+          <div className="flex gap-5 items-center">
+             <Link href="/create-prompt" className="black_btn hidden sm:block">
               Create Prompt
             </Link>
-
-            <button
-              type="button"
-              className="outline_btn"
-              onClick={() => signOut({ callbackUrl: "/" })}
-            >
-              Sign Out
-            </button>
-
-            <Link href="/profile">
-              <Image
-                src={session?.user.image || ""}
-                width={37}
-                height={37}
-                alt="profile"
-                className="rounded-full"
-              />
-            </Link>
-          </div>
-        ) : (
-          <>
-            {providers &&
-              Object.values(providers).map((provider: any) => (
-                <button
-                  type="button"
-                  key={provider.name}
-                  onClick={() => signIn(provider.id)}
-                  className="black_btn"
-                >
-                  Sign In
-                </button>
-              ))}
-          </>
-        )}
-      </div>
-
-      {/* // Mobile navigation */}
-      <div className="sm:hidden flex relative">
-        {session?.user ? (
-          <div className="flex">
             <div className="flex">
               <Image
                 src={session?.user.image || ""}
                 width={37}
                 height={37}
                 alt="profile"
-                className="rounded-full"
+                className="rounded-lg"
                 onClick={() => setToggleDropdown((prev) => !prev)}
               />
             </div>
@@ -102,7 +61,7 @@ const Nav = () => {
                 </Link>
                 <Link
                   href="/create-prompt"
-                  className="dropdown_link"
+                  className="dropdown_link sm:hidden"
                   onClick={() => setToggleDropdown(false)}
                 >
                   Create Prompt
@@ -113,7 +72,7 @@ const Nav = () => {
                     setToggleDropdown(false);
                     signOut();
                   }}
-                  className="mt-5 w-full black_btn"
+                  className="mt-3 w-full black_btn"
                 >
                   Sign Out
                 </button>
