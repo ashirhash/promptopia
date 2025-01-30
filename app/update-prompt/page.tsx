@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Form from "components/Form";
-import { useEdgeStore } from "utils/edgestore";
+import { useEdgeStore } from "/lib/edgestore";
 
 const UpdatePromptWrapper = () => {
   return (

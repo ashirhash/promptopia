@@ -1,7 +1,7 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
-import { EdgeStoreProvider } from "utils/edgestore";
+import { EdgeStoreProvider } from "/lib/edgestore";
 import { LoaderProvider } from "contexts/LoaderContext";
 
 interface ProviderProps {

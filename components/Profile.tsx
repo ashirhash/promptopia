@@ -1,5 +1,5 @@
 "use client";
-import { useEdgeStore } from "utils/edgestore";
+import { useEdgeStore } from "/lib/edgestore";
 import { useLoader } from "contexts/LoaderContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";

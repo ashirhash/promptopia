@@ -1,4 +1,4 @@
-import { ConnectToDB } from "utils/database";
+import { ConnectToDB } from "/lib/database";
 import Prompt from "models/prompt";
 import Likes from "models/like";
 

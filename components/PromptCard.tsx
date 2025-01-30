@@ -1,10 +1,9 @@
 "use client";
 import { useState, useEffect, useContext } from "react";
-import Image from "next/image";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { CommentIcon, HeartIcon, ShareIcon } from "./ui/Icons";
-import { useDebounce, useTimeAgo } from "@utils/hooks";
+import { useDebounce, useTimeAgo } from "../lib/hooks/hooks";
 import { PopupContext } from "./Feed";
 import UserBox from "./UserBox";
 
@@ -21,7 +20,6 @@ const PromptCard = ({
   handleEdit,
   handleDelete,
 }: PromptCardProps) => {
-  const [copied, setCopied] = useState("");
   const [likes, setLikes] = useState<number>(post.likes);
   const [isLiked, setIsLiked] = useState<boolean>(post.liked);
 
@@ -81,7 +79,7 @@ const PromptCard = ({
     router.push(`/prompts/${post._id}`);
   };
 
-  const { setIsOpen, setSelectedImage } = useContext(PopupContext);
+  const { setIsOpen, setSelectedImage, setShareId } = useContext(PopupContext);
 
   const handleImageClick = (e: any, src: string) => {
     e.stopPropagation();
@@ -96,7 +94,11 @@ const PromptCard = ({
     );
   };
 
-  const handleShare = () => {};
+  const handleShare = (e: any, src: string) => {
+    e.stopPropagation();
+    setIsOpen(true);
+    setShareId(src);
+  };
 
   return (
     <div
@@ -106,7 +108,7 @@ const PromptCard = ({
       <div className="flex justify-between items-start gap-5">
         <div className="flex-1 flex flex-col item items-start justify-between gap-3">
           {post.title && (
-            <h2 className="font-bold font-fig text-xl">{post.title}</h2>
+            <h2 className="font-semibold font-fig text-xl">{post.title}</h2>
           )}
 
           <div className="disable_parent_hover flex gap-3 items-center w-full justify-between ">
@@ -174,6 +176,7 @@ const PromptCard = ({
               </div>
               <div className="flex items-center gap-4">
                 <div
+                  onClick={(e: any) => handleShare(e, post._id)}
                   className={`${
                     session?.user
                       ? "disable_parent_hover"
@@ -183,7 +186,9 @@ const PromptCard = ({
                   <ShareIcon
                     size={30}
                     className={`${
-                      session?.user ? "hover:bg-slate-300" : ""
+                      session?.user
+                        ? " hover:bg-slate-300"
+                        : "pointer-events-none"
                     }  transition p-[5.5px] bg-accent-gray rounded-lg cursor-pointer`}
                   />
                   <span className="font-inter text-sm text-gray-700">

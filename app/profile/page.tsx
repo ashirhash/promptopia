@@ -1,7 +1,7 @@
 import { getServerSession } from "next-auth";
-import Profile from "@components/Profile";
-import { authOptions } from "@utils/nextauth";
-import { ConnectToDB } from "@utils/database";
+import Profile from "components/Profile";
+import { authOptions } from "/lib/nextauth";
+import { ConnectToDB } from "/lib/database";
 
 export default async function Page() {
   const session: any = await getServerSession(authOptions);
@@ -16,7 +16,7 @@ export default async function Page() {
   async function fetchPosts() {
     await ConnectToDB();
     const response = await fetch(
-      `${process.env.NEXTAUTH_URL}/api/users/${session?.user.id}/posts`
+      `${process.env.NEXTAUTH_URL}/api/users/${session?.user.id}/posts`,
     );
     return await response.json();
   }

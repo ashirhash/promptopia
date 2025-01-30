@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEdgeStore } from "utils/edgestore";
+import { useEdgeStore } from "/lib/edgestore";
 import { useLoader } from "contexts/LoaderContext";
 
 import Form from "components/Form";

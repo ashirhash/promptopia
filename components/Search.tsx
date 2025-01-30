@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { CrossIcon } from "./ui/Icons";
-import { useDebounce } from "utils/hooks";
+import { useDebounce } from "../lib/hooks/hooks";
 
 const Search = ({
   searchText,

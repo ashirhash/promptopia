@@ -21,7 +21,7 @@ export const useTimeAgo = (createdAt: string) => {
   const date = new Date(createdAt);
 
   if (isNaN(date.getTime())) {
-    return createdAt; 
+    return createdAt;
   }
 
   return formatDistanceToNow(date, { addSuffix: true });

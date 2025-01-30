@@ -6,7 +6,7 @@ import { useSession } from "next-auth/react";
 import UserBox from "components/UserBox";
 import CommentCard from "components/CommentCard";
 import { useLoader } from "contexts/LoaderContext";
-import { useTimeAgo } from "utils/hooks";
+import { useTimeAgo } from "../../../lib/hooks/hooks";
 import { useRouter } from "next/navigation";
 interface PromptProfileProps {
   params: {

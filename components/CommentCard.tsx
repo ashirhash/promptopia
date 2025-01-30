@@ -1,7 +1,7 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useDebounce, useTimeAgo } from "utils/hooks";
+import { useDebounce, useTimeAgo } from "../lib/hooks/hooks";
 import UserBox from "./UserBox";
 
 interface CommentCardProps {

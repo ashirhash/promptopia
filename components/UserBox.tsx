@@ -4,7 +4,6 @@ import Image from "next/image";
 const UserBox = ({
   img,
   username,
-  email,
   handleUserClick,
   className = "",
 }: any) => {
@@ -22,7 +21,7 @@ const UserBox = ({
       />
 
       <div className="flex flex-col">
-        <h3 className="font-satoshi font-semibold text-light-black">
+        <h3 className="font-fig font-semibold text-[16px] text-light-black">
           {username}
         </h3>
       </div>
