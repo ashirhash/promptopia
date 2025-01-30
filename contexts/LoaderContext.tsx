@@ -1,4 +1,4 @@
-import Loader from "@components/Loader";
+import Loader from "components/Loader";
 import React, { createContext, useContext, useState } from "react";
 
 interface LoaderContextType {

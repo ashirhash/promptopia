@@ -3,10 +3,10 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useEdgeStore } from "@utils/edgestore";
-import { useLoader } from "@contexts/LoaderContext";
+import { useEdgeStore } from "utils/edgestore";
+import { useLoader } from "contexts/LoaderContext";
 
-import Form from "@components/Form";
+import Form from "components/Form";
 
 const CreatePrompt = () => {
   const { data: session }: any = useSession();

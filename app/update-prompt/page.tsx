@@ -3,8 +3,8 @@
 import { useState, useEffect, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import Form from "@components/Form";
-import { useEdgeStore } from "@utils/edgestore";
+import Form from "components/Form";
+import { useEdgeStore } from "utils/edgestore";
 
 const UpdatePromptWrapper = () => {
   return (
@@ -118,7 +118,7 @@ const UpdatePrompt = () => {
   if (status === "loading") {
     return (
       <div>
-        <p className="desc">Loading session...</p>
+        <p className="desc mx-auto">Loading session...</p>
       </div>
     );
   }
@@ -126,18 +126,18 @@ const UpdatePrompt = () => {
   if (status === "unauthenticated") {
     return (
       <div>
-        <p className="desc">Please sign in to continue</p>
+        <p className="desc mx-auto">Please sign in to continue</p>
       </div>
     );
   }
 
   if (!promptId) {
-    return <div className="desc text-center">No prompt ID found</div>;
+    return <div className="desc text-center mx-auto">No prompt ID found</div>;
   }
 
   if (isUserAllowed === 2) {
     return (
-      <div className="desc text-center">
+      <div className="desc text-center mx-auto">
         Checking if you are allowed to edit...
       </div>
     );
@@ -145,7 +145,7 @@ const UpdatePrompt = () => {
 
   if (isUserAllowed === 0) {
     return (
-      <div className="desc text-center">
+      <div className="desc text-center mx-auto">
         You are not allowed to edit this prompt as you are not the author
       </div>
     );

@@ -1,8 +1,8 @@
 "use client";
 import { SessionProvider } from "next-auth/react";
 import { Session } from "next-auth";
-import { EdgeStoreProvider } from "@utils/edgestore";
-import { LoaderProvider } from "@contexts/LoaderContext";
+import { EdgeStoreProvider } from "utils/edgestore";
+import { LoaderProvider } from "contexts/LoaderContext";
 
 interface ProviderProps {
   children: React.ReactNode;

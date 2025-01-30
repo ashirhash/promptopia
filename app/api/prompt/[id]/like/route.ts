@@ -1,6 +1,6 @@
-import { ConnectToDB } from "@utils/database";
-import Prompt from "@models/prompt";
-import Likes from "@models/like";
+import { ConnectToDB } from "utils/database";
+import Prompt from "models/prompt";
+import Likes from "models/like";
 
 export const PATCH = async (req: any, { params }: any) => {
   try {

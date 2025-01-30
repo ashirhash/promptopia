@@ -1,6 +1,6 @@
-import { ConnectToDB } from "@utils/database";
-import Comment from "@models/comment";
-import Prompt from "@models/prompt";
+import { ConnectToDB } from "utils/database";
+import Comment from "models/comment";
+import Prompt from "models/prompt";
 
 export const POST = async (req: any, { params }: any) => {
   try {

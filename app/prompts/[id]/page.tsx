@@ -2,12 +2,12 @@
 
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { useTimeAgo } from "@utils/hooks";
 import { useSession } from "next-auth/react";
-import UserBox from "@components/UserBox";
-import CommentCard from "@components/CommentCard";
-import { useLoader } from "@contexts/LoaderContext";
-
+import UserBox from "components/UserBox";
+import CommentCard from "components/CommentCard";
+import { useLoader } from "contexts/LoaderContext";
+import { useTimeAgo } from "utils/hooks";
+import { useRouter } from "next/navigation";
 interface PromptProfileProps {
   params: {
     id: string;
@@ -38,9 +38,7 @@ const Page = ({ params }: PromptProfileProps) => {
     createdAt: "just now"
   });
   const { setGlobalLoading } = useLoader();
-
-  console.log(comments);
-  
+  const router = useRouter()
 
   const handleComment = async (e: any) => {
     e.preventDefault();
@@ -137,12 +135,25 @@ const Page = ({ params }: PromptProfileProps) => {
     });
   }, [session]);
 
-  if (loading) return <div className="desc">Loading...</div>;
+  const isSameUser = session?.user.id === post.creator?._id;
+
+  const handleUserClick = (e: any) => {
+    e.stopPropagation();
+    router.push(
+      isSameUser
+        ? session
+          ? "/profile"
+          : "/"
+        : `/authors/${post.creator._id}`
+    );
+  };
+
+  if (loading) return <div className="desc mx-auto text-center">Loading...</div>;
 
   if (!hasPost)
     return (
       <>
-        <div className="desc mb-3">Post not found</div>
+        <div className="desc mb-3 mx-auto text-center">Post not found</div>
         <Link href="/" className="black_btn">
           Browse posts
         </Link>
@@ -171,6 +182,7 @@ const Page = ({ params }: PromptProfileProps) => {
             img={post.creator.image}
             username={post.creator.username}
             email={post.creator.email}
+            handleUserClick={handleUserClick}
           />
           <p
             className="font-inter pl-2 text-sm blue_gradient"

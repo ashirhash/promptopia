@@ -1,7 +1,7 @@
 "use client";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useDebounce, useTimeAgo } from "@utils/hooks";
+import { useDebounce, useTimeAgo } from "utils/hooks";
 import UserBox from "./UserBox";
 
 interface CommentCardProps {
@@ -28,7 +28,7 @@ const CommentCard = ({ comment, handleDelete }: CommentCardProps) => {
   };
 
   return (
-    <div className="p-2 pb-4 border rounded-md flex flex-col gap-3">
+    <div className="px-2 py-4 border rounded-md flex flex-col gap-3">
       <div className="w-fit">
         <UserBox
           className="px-3"
