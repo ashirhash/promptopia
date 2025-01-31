@@ -18,7 +18,6 @@ export const PromptCardList = ({
     <div className="mt-10 prompt_layout">
       {posts.length > 0 ? (
         posts
-          .reverse()
           .map((post: any) => (
             <PromptCard
               key={post._id}
@@ -73,7 +72,7 @@ const Feed = ({ posts, handleEdit, handleDelete }: any) => {
         toast({
           title: "Shared!",
           description: "Post has been shared successfully",
-          variant: "dark",
+          variant: "success",
         });
       } else {
         throw new Error("Network response was not ok");
