@@ -47,7 +47,7 @@ const Page = ({ params }: PromptProfileProps) => {
     if (!session?.user.id) {
       console.error("User is not logged in or session data is not available");
       toast({
-        title: "You are not logged in!",
+        title: "Oops!",
         description: "Please sign in to comment",
         variant: "destructive",
       });
@@ -66,6 +66,11 @@ const Page = ({ params }: PromptProfileProps) => {
       });
       if (res.ok) {
         setComments([...comments, comment]);
+        toast({
+          title: "Success!",
+          description: "Your comment has been posted",
+          variant: "success",
+        });
       }
     } catch (error) {
       console.error(
@@ -219,7 +224,7 @@ const Page = ({ params }: PromptProfileProps) => {
           />
           <button
             type="submit"
-            disabled={session?.user.id}
+            disabled={!session?.user.id}
             className={`px-5 mt-3 py-1.5 md:text-base text-sm rounded-full ${
               !session?.user.id
                 ? "bg-gray-300 text-gray-400 cursor-not-allowed "
