@@ -10,7 +10,7 @@ const UserBox = ({
   return (
     <div
       onClick={handleUserClick}
-      className={`flex gap-3 relative z-10 items-center cursor-pointer transition-all rounded-md ${className}`}
+      className={`flex gap-3 relative z-10 items-center cursor-pointer transition-all rounded-md ${handleUserClick ? "group" : ""} ${className}`}
     >
       <Image
         src={img}
@@ -21,7 +21,7 @@ const UserBox = ({
       />
 
       <div className="flex flex-col">
-        <h3 className="font-fig font-semibold text-[16px] text-light-black">
+        <h3 className="font-fig group-has-[:hover]:underline font-semibold text-[16px] text-light-black">
           {username}
         </h3>
       </div>

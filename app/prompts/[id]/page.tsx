@@ -8,6 +8,7 @@ import CommentCard from "components/CommentCard";
 import { useLoader } from "contexts/LoaderContext";
 import { useTimeAgo } from "../../../lib/hooks/hooks";
 import { useRouter } from "next/navigation";
+import { useToast } from "/lib/hooks/use-toast";
 interface PromptProfileProps {
   params: {
     id: string;
@@ -18,7 +19,7 @@ interface Comment {
   userId: string | null; // Adjust the type based on your actual session object
   parentId: string;
   content: string;
-  createdAt: string
+  createdAt: string;
 }
 
 const Page = ({ params }: PromptProfileProps) => {
@@ -30,23 +31,30 @@ const Page = ({ params }: PromptProfileProps) => {
   const [timestamps, setTimestamps] = useState<string>("");
   const [isCommenting, setIsCommenting] = useState(false);
   const [comments, setComments] = useState<Comment[]>([]);
-  // the remaining data like createdAt is locally being temporarily created, mostly as a fake data to show the changed instantly to the user instaed of making an api call 
+  // the remaining data like createdAt is locally being temporarily created, mostly as a fake data to show the changed instantly to the user instaed of making an api call
   const [comment, setComment] = useState<Comment>({
     userId: session?.user.id,
     parentId: "",
     content: "",
-    createdAt: "just now"
+    createdAt: "just now",
   });
   const { setGlobalLoading } = useLoader();
-  const router = useRouter()
+  const router = useRouter();
+  const { toast } = useToast();
 
   const handleComment = async (e: any) => {
     e.preventDefault();
-    setIsCommenting(true);
     if (!session?.user.id) {
       console.error("User is not logged in or session data is not available");
+      toast({
+        title: "You are not logged in!",
+        description: "Please sign in to comment",
+        variant: "destructive",
+      });
       return;
     }
+
+    setIsCommenting(true);
 
     try {
       const res = await fetch(`/api/prompt/${post._id}/comment`, {
@@ -56,16 +64,15 @@ const Page = ({ params }: PromptProfileProps) => {
         },
         body: JSON.stringify(comment),
       });
-      if(res.ok) {
-        setComments([...comments, comment])
+      if (res.ok) {
+        setComments([...comments, comment]);
       }
     } catch (error) {
       console.error(
         "The following error occured while liking the post: ",
         error
       );
-    }
-    finally {
+    } finally {
       setIsCommenting(false);
     }
   };
@@ -140,15 +147,12 @@ const Page = ({ params }: PromptProfileProps) => {
   const handleUserClick = (e: any) => {
     e.stopPropagation();
     router.push(
-      isSameUser
-        ? session
-          ? "/profile"
-          : "/"
-        : `/authors/${post.creator._id}`
+      isSameUser ? (session ? "/profile" : "/") : `/authors/${post.creator._id}`
     );
   };
 
-  if (loading) return <div className="desc mx-auto text-center">Loading...</div>;
+  if (loading)
+    return <div className="desc mx-auto text-center">Loading...</div>;
 
   if (!hasPost)
     return (
@@ -184,12 +188,7 @@ const Page = ({ params }: PromptProfileProps) => {
             email={post.creator.email}
             handleUserClick={handleUserClick}
           />
-          <p
-            className="font-inter pl-2 text-sm blue_gradient"
-            // onClick={() => handleTagClick && handleTagClick(post.tag)}
-          >
-            {post.tag}
-          </p>
+          <p className="font-inter pl-2 text-sm blue_gradient">{post.tag}</p>
         </div>
       </div>
       <div className="mt-5 pb-4">
@@ -220,9 +219,12 @@ const Page = ({ params }: PromptProfileProps) => {
           />
           <button
             type="submit"
-            className={`px-5 mt-3 py-1.5 md:text-base text-sm bg-primary-orange rounded-full text-white ${
-              isCommenting ? "pointer-events-none" : "cursor-pointer"
-            }`}
+            disabled={session?.user.id}
+            className={`px-5 mt-3 py-1.5 md:text-base text-sm rounded-full ${
+              !session?.user.id
+                ? "bg-gray-300 text-gray-400 cursor-not-allowed "
+                : "text-white bg-primary-orange "
+            } ${isCommenting ? "pointer-events-none" : "cursor-pointer"}`}
           >
             {isCommenting ? "POSTING..." : "POST"}
           </button>

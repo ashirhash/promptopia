@@ -17,15 +17,17 @@ export const PromptCardList = ({
   return (
     <div className="mt-10 prompt_layout">
       {posts.length > 0 ? (
-        posts.map((post: any) => (
-          <PromptCard
-            key={post._id}
-            post={post}
-            handleTagClick={handleTagClick}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          />
-        ))
+        posts
+          .reverse()
+          .map((post: any) => (
+            <PromptCard
+              key={post._id}
+              post={post}
+              handleTagClick={handleTagClick}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
+          ))
       ) : (
         <p className="desc">No more posts</p>
       )}
@@ -50,6 +52,15 @@ const Feed = ({ posts, handleEdit, handleDelete }: any) => {
   const { toast } = useToast();
 
   const handleShare = async () => {
+    if (!session?.user.id) {
+      console.error("User is not logged in or session data is not available");
+      toast({
+        title: "You are not logged in!",
+        description: "Please sign in to comment",
+        variant: "destructive",
+      });
+      return;
+    }
     try {
       setGlobalLoading(true);
       const response = await fetch(`api/prompt/${shareId}/share`, {
@@ -62,6 +73,7 @@ const Feed = ({ posts, handleEdit, handleDelete }: any) => {
         toast({
           title: "Shared!",
           description: "Post has been shared successfully",
+          variant: "dark",
         });
       } else {
         throw new Error("Network response was not ok");
@@ -71,6 +83,7 @@ const Feed = ({ posts, handleEdit, handleDelete }: any) => {
       toast({
         title: "Failed to share post",
         description: "Something went wrong",
+        variant: "destructive",
       });
     } finally {
       setGlobalLoading(false);
