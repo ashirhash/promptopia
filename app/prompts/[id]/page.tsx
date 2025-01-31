@@ -224,12 +224,11 @@ const Page = ({ params }: PromptProfileProps) => {
           />
           <button
             type="submit"
-            disabled={!session?.user.id}
             className={`px-5 mt-3 py-1.5 md:text-base text-sm rounded-full ${
               !session?.user.id
                 ? "bg-gray-300 text-gray-400 cursor-not-allowed "
                 : "text-white bg-primary-orange "
-            } ${isCommenting ? "pointer-events-none" : "cursor-pointer"}`}
+            } ${isCommenting ? "pointer-events-none" : ""}`}
           >
             {isCommenting ? "POSTING..." : "POST"}
           </button>
