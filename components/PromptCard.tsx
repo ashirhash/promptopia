@@ -152,12 +152,13 @@ const PromptCard = ({
                   } flex items-center gap-2 select-none cursor-pointer`}
                   onClick={session?.user && handleLike}
                 >
-                  <HeartIcon
+                  <div
                     className={`${
                       session?.user ? "hover:bg-slate-300" : ""
-                    }  transition p-[6.5px] bg-accent-gray rounded-lg cursor-pointer`}
-                    isActive={isLiked}
-                  />
+                    }  transition  bg-accent-gray rounded-lg cursor-pointer`}
+                  >
+                    <HeartIcon className="p-[6.5px]" isActive={isLiked} />
+                  </div>
                   <span className="font-inter text-sm text-gray-700">
                     {likes}
                   </span>
