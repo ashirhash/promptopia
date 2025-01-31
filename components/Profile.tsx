@@ -4,12 +4,14 @@ import { useLoader } from "contexts/LoaderContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Feed from "./Feed";
+import { useSession } from "next-auth/react";
 
 const Profile = ({ name, desc, posts = [] }: any) => {
   const [postsState, setPostsState] = useState(posts);
   const { edgestore } = useEdgeStore();
   const { setGlobalLoading } = useLoader();
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleEdit = (post: any) => {
     router.push(`/update-prompt?id=${post._id}`);
@@ -57,8 +59,8 @@ const Profile = ({ name, desc, posts = [] }: any) => {
 
       <Feed
         posts={postsState}
-        handleDelete={handleDelete}
-        handleEdit={handleEdit}
+        handleDelete={session?.user && handleDelete}
+        handleEdit={session?.user && handleEdit}
       />
     </section>
   );
