@@ -1,4 +1,7 @@
 import Profile from "components/Profile";
+import { ConnectToDB } from "/lib/database";
+import { getServerSession } from "next-auth";
+import { authOptions } from "/lib/nextauth";
 
 type AuthorProps = {
   params: {
@@ -7,9 +10,12 @@ type AuthorProps = {
 };
 
 const fetchPosts = async (id: string) => {
+  ConnectToDB();
+  const session: any = await getServerSession(authOptions);
+  const sessionId = session?.user.id
   try {
     const response = await fetch(
-      `${process.env.NEXTAUTH_URL}/api/users/${id}/posts`
+      `${process.env.NEXTAUTH_URL}/api/users/${id}/posts?sessionId=${sessionId}`
     );
     if (!response.ok) throw new Error("Network response was not ok");
     return await response.json();
@@ -24,7 +30,7 @@ export default async function AuthorProfile({ params }: AuthorProps) {
 
   return (
     <Profile
-      name={`${posts[0]?.creator?.username || "User"}'s`}
+      name={`${posts?.[0]?.creator?.username || "User"}'s`}
       desc="Welcome to my profile"
       posts={posts}
     />

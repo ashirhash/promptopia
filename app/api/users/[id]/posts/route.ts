@@ -2,21 +2,23 @@ import { ConnectToDB } from "/lib/database";
 import Prompt from "models/prompt";
 import Likes from "models/like";
 
-export const GET = async (req: any, { params }: any) => {
+export const GET = async (req: Request, res: any) => {
   try {
-    const userId = params.id;
-    
     await ConnectToDB();
+    const { params } = res;
+    const userId = params.id;
+    const url = new URL(req.url);
+    const sessionId = url.searchParams.get("sessionId");
 
     // Fetch all prompts created by the user specified in the params
     const prompts = await Prompt.find({
-      creator: params.id,
+      creator: userId,
     }).populate("creator");
 
     let likedPostIds: string[] = [];
 
-    if (userId && userId !== "null" && userId !== "undefined") {
-      const userLikes = await Likes.find({ userId: userId }).select("postId");
+    if (sessionId && sessionId !== "null" && sessionId !== "undefined") {
+      const userLikes = await Likes.find({ userId: sessionId }).select("postId");
       likedPostIds = userLikes.map((like) => like.postId.toString());
     }
 
