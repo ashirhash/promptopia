@@ -193,7 +193,7 @@ const PromptCard = ({
                     }  transition p-[5.5px] bg-accent-gray rounded-lg cursor-pointer`}
                   />
                   <span className="font-inter text-sm text-gray-700">
-                    {post.commentCount}
+                    {post.shares}
                   </span>
                 </div>
               </div>

@@ -3,6 +3,7 @@ import User from "models/user";
 import Prompt from "models/prompt";
 import Likes from "models/like";
 import Comment from "models/comment";
+import Share from "/models/share";
 
 let isConnected = false;
 const mongoDbUri: string | undefined = process.env.MONGODB_URI
@@ -15,6 +16,7 @@ const registerModels = () => {
   Prompt;
   Likes;
   Comment;
+  Share
 };
 
 
