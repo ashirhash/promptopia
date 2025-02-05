@@ -3,12 +3,6 @@ import { ConnectToDB } from "/lib/database";
 import { getServerSession } from "next-auth";
 import { authOptions } from "/lib/nextauth";
 
-type AuthorProps = {
-  params: {
-    id: string;
-  };
-};
-
 const fetchPosts = async (id: string) => {
   ConnectToDB();
   const session: any = await getServerSession(authOptions);
@@ -36,3 +30,9 @@ export default async function AuthorProfile({ params }: AuthorProps) {
     />
   );
 }
+
+type AuthorProps = {
+  params: {
+    id: string;
+  };
+};

@@ -39,8 +39,6 @@ export const DELETE = async (req: any) => {
 
     const { sessionId, shareId } = await req.json();
 
-    console.log({ sessionId, shareId });
-
     if (!isValidString(sessionId)) {
       throw new Error(`No session ID found. Received: ${sessionId}`);
     }
@@ -55,15 +53,13 @@ export const DELETE = async (req: any) => {
       throw new Error(`Shared post not found for ID: ${shareId}`);
     }
 
-    console.log(sharePost.creator._id.toString(), "sharePost.creator._id ");
-
     // Check if the sessionId matches the creator of the shared post
     if (sharePost.creator._id.toString() !== sessionId) {
       throw new Error("You are not authorized to delete this shared post.");
     }
 
     // Delete the shared post if the user is authorized
-    await Share.deleteOne({ id: shareId });
+    await Share.findByIdAndDelete(shareId);
 
     return new Response("Shared post deleted successfully", {
       status: 200,

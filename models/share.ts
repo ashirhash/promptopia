@@ -13,7 +13,7 @@ const ShareSchema = new Schema(
   { timestamps: true }
 );
 
-// updates shares count in the doc of post which is being shared
+// Updates shares count in the doc of the post which is being shared
 ShareSchema.post("save", async function (doc) {
   try {
     const result = await Prompt.updateOne(
@@ -28,12 +28,15 @@ ShareSchema.post("save", async function (doc) {
   }
 });
 
+// Decrements the shares count when a share is deleted
 ShareSchema.post("findOneAndDelete", async function (doc) {
   try {
-    await Prompt.findByIdAndUpdate(
-      doc.sharedPost,
-      { $inc: { shares: -1 } }
-    );
+    if (doc) {
+      await Prompt.updateOne(
+        { _id: doc.sharedPost },
+        { $inc: { shares: -1 } } // Atomic decrement
+      );
+    }
   } catch (err) {
     console.error("Error updating shares:", err);
   }

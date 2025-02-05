@@ -59,11 +59,7 @@ export const DELETE = async (req: any, { params }: any) => {
     // get all resources
     const { userId, commentId } = await req.json();
     const postId = params.id;
-
     
-    console.log("--------------");
-    console.log({ postId, userId, commentId });
-
     // handle resource validations
     if (!userId) {
       throw new Error("No user id found");
