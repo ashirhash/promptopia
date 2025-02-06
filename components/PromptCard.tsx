@@ -10,8 +10,8 @@ import UserBox from "./UserBox";
 interface PromptCardProps {
   post: any;
   handleTagClick?: (e: any, postTag: string) => void;
-  handleDelete?: (post: number) => void;
-  handleEdit?: (post: number) => void;
+  handleDelete?: (e: any, post: number) => void;
+  handleEdit?: (e: any, post: number) => void;
 }
 
 const PromptCard = ({
@@ -206,7 +206,7 @@ const PromptCard = ({
                       type="button"
                       role="button"
                       className={`bg-white p-2 rounded-lg disable_parent_hover hover:underline font-inter text-sm border-1 green_gradient hover:scale-110 transition cursor-pointer`}
-                      onClick={() => handleEdit(post)}
+                      onClick={(e) => handleEdit(e, post)}
                     >
                       Edit
                     </button>
@@ -216,7 +216,7 @@ const PromptCard = ({
                       type="button"
                       role="button"
                       className="p-2 font-inter disable_parent_hover hover:underline text-sm orange_gradient hover:scale-110 transition cursor-pointer"
-                      onClick={() => handleDelete(post)}
+                      onClick={(e) => handleDelete(e, post)}
                     >
                       Delete
                     </button>

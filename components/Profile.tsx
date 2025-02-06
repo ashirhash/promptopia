@@ -13,11 +13,13 @@ const Profile = ({ name, desc, posts = [] }: any) => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  const handleEdit = (post: any) => {
+  const handleEdit = (e: any,post: any) => {
+    e.stopPropagation()
     router.push(`/update-prompt?id=${post._id}`);
   };
 
-  const handleDelete = async (post: any) => {
+  const handleDelete = async (e: any,post: any) => {
+    e.stopPropagation()
     setGlobalLoading(true);
     const hasConfirmed = confirm(
       "Are you sure you want to delete this prompt?"
@@ -48,6 +50,9 @@ const Profile = ({ name, desc, posts = [] }: any) => {
       } finally {
         setGlobalLoading(false);
       }
+    }
+    else {
+      setGlobalLoading(false);
     }
   };
   return (
